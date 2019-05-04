@@ -1,0 +1,7 @@
+{% extends "stocktrading/base.html" %}
+{% block content %}
+	<h1>Zach's Stock Trading</h1>
+	{% for stock in stocks  %}
+		<p>{{stock.symbol}}:{{stock.price}}</p>
+	{% endfor %}
+{% endblock content %}
