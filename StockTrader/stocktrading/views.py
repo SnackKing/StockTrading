@@ -1,7 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import pyrebase
 import os
+from .forms import SignupForm, LoginForm
+from django.contrib import messages
+
 config = {
   "apiKey": "AIzaSyAzXh-si71dEDldZkLmbY7l-_NZ8VJTfs4",
   "authDomain": "stocktrader-239615.firebaseapp.com",
@@ -33,7 +36,7 @@ stocks = [
 
 def home(request):
 	archer = {"name": "Sterling Archer", "agency": "Figgis Agency"}
-	db.child("agents").set(archer)
+	#db.child("agents").set(archer)
 	context ={
 		'stocks': stocks
 	}
@@ -45,11 +48,24 @@ def about(request):
 	return render(request, 'stocktrading/about.html', context)
 
 def login(request):
-	context = {
-	}
-	return render(request, 'stocktrading/login.html', context)
+	if request.method == 'POST':
+		form = LoginForm(request.POST)
+		if form.is_valid():
+			email = form.cleaned_data.get('email')
+			messages.success(request, f'{email} has been logged in')
+			return redirect('stocktrading-home')
+	else:
+		form = LoginForm()
+		return render(request, 'stocktrading/login.html', {'form':form})
+
 
 def signup(request):
-	context = {
-	}
-	return render(request, 'stocktrading/signup.html', context)
+	if request.method == 'POST':
+		form = SignupForm(request.POST)
+		if form.is_valid():
+			username = form.cleaned_data.get('name')
+			messages.success(request, f'Account created for {username}')
+			return redirect('stocktrading-home')
+	else:
+		form = SignupForm()
+		return render(request, 'stocktrading/signup.html', {'form':form})

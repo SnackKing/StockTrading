@@ -16,3 +16,6 @@ body{
 .login-button{
 	background-color: #5f788a;
 }
+.centeredText{
+	text-align: center;
+}
