@@ -1,0 +1,18 @@
+{% extends "stocktrading/base.html" %}
+{% block content %}
+<div class="w-50 login-form" >
+    <form class="" method="POST">
+      {% csrf_token %}       
+      <h2 class="login-header">Sign Up</h2>
+      <input type="text" class="form-control form-input login-field" name="username" placeholder="Name" required="" autofocus="" />
+      <input type="text" class="form-control form-input login-field" name="email" placeholder="Email Address" required="" autofocus="" />
+      <input type="password" class="form-control form-input login-field" name="password" placeholder="Password" required=""/>      
+      <button class="btn btn-lg btn-primary btn-block login-button" type="submit">Login</button>   
+    </form>
+
+     <p class="login-header">Already have an account?  <a class="" href="{% url 'stocktrading-signup' %}">Log In</a> </p>  
+
+
+ </div>
+	
+{% endblock content %}

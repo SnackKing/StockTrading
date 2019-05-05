@@ -40,4 +40,16 @@ def home(request):
 	return render(request, 'stocktrading/home.html', context) #template subdirname/filename format
 
 def about(request):
-	return render(request, 'stocktrading/about.html')
+	context = {
+	}
+	return render(request, 'stocktrading/about.html', context)
+
+def login(request):
+	context = {
+	}
+	return render(request, 'stocktrading/login.html', context)
+
+def signup(request):
+	context = {
+	}
+	return render(request, 'stocktrading/signup.html', context)

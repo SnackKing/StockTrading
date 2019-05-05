@@ -1,16 +1,33 @@
 {% extends "stocktrading/base.html" %}
 {% block content %}
-	<h1>Zach's Stock Trading</h1>
-	{% for stock in stocks  %}
-		<article class="media content-section">
-		  <div class="media-body">
-		    <div class="article-metadata">
-		      <a class="mr-2" href="#">{{ stock.symbol }}</a>
-		      <small class="text-muted">Date updated</small>
-		    </div>
-		    <h2><a class="article-title" href="#">{{ stock.price }}</a></h2>
-		    <p class="article-content">More text</p>
-		  </div>
-		</article>	
-	{% endfor %}
+<h1>Zach's Stock Trading</h1>
+<div class="row">
+   <div class="col-md-8">
+      {% for stock in stocks  %}
+      <article class="media content-section">
+         <div class="media-body">
+            <div class="article-metadata">
+               <a class="mr-2" href="#">{{ stock.symbol }}</a>
+               <small class="text-muted">Date updated</small>
+            </div>
+            <h2><a class="article-title" href="#">{{ stock.price }}</a></h2>
+            <p class="article-content">More text</p>
+         </div>
+      </article>
+      {% endfor %}
+   </div>
+   <div class="col-md-4">
+      <div class="content-section">
+         <h3>Our Sidebar</h3>
+         <p class='text-muted'>You can put any information here you'd like.
+         <ul class="list-group">
+            <li class="list-group-item list-group-item-light">Latest Posts</li>
+            <li class="list-group-item list-group-item-light">Announcements</li>
+            <li class="list-group-item list-group-item-light">Calendars</li>
+            <li class="list-group-item list-group-item-light">etc</li>
+         </ul>
+         </p>
+      </div>
+   </div>
+</div>
 {% endblock content %}
