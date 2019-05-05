@@ -1,5 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+import pyrebase
+import os
+config = {
+  "apiKey": "AIzaSyAzXh-si71dEDldZkLmbY7l-_NZ8VJTfs4",
+  "authDomain": "stocktrader-239615.firebaseapp.com",
+  "databaseURL":  "https://stocktrader-239615.firebaseio.com",
+  "storageBucket": "stocktrader-239615.appspot.com",
+  "serviceAccount": "creds.json"
+}
+
+firebase = pyrebase.initialize_app(config)
+db = firebase.database();
 # Create your views here.
 
 stocks = [
@@ -20,6 +32,8 @@ stocks = [
 ]
 
 def home(request):
+	archer = {"name": "Sterling Archer", "agency": "Figgis Agency"}
+	db.child("agents").set(archer)
 	context ={
 		'stocks': stocks
 	}

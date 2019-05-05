@@ -2,6 +2,15 @@
 {% block content %}
 	<h1>Zach's Stock Trading</h1>
 	{% for stock in stocks  %}
-		<p>{{stock.symbol}}:{{stock.price}}</p>
+		<article class="media content-section">
+		  <div class="media-body">
+		    <div class="article-metadata">
+		      <a class="mr-2" href="#">{{ stock.symbol }}</a>
+		      <small class="text-muted">Date updated</small>
+		    </div>
+		    <h2><a class="article-title" href="#">{{ stock.price }}</a></h2>
+		    <p class="article-content">More text</p>
+		  </div>
+		</article>	
 	{% endfor %}
 {% endblock content %}

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "stocktrader-239615",
+  "private_key_id": "8d3efd20e26a1ca1574423bbffa3334f8972d9da",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCsm3QMnpFN2rT9\nTvORHzyNngAlgv3/DyLsovdjXngUqxzQs4IwAUzf925y9gJWzpNtP9IoHc1BN2h5\n2jCn4YmWXgWqYZsfzgKMPoWyRbPHLVokY+kg0x1syLM60nsTruJiQMCZjX1b3iO7\nFIS1mxjNIwktm0bx2xc2reoC21t6Ur2UY3Z+qfWiBxepmcXRj5sm654M6mYM14fk\nut+2AWhu5R3YjZHN3U6OMg1L+poGhqJf51YHKtdv9BIG+XVyaQRw+Uip2aqmJinR\naonwN7EbG2XqAV341ymaoJmg2OlBke0tf9GDTYWvNqKjlhLk1aPyPxMyCRWj/7rz\nO5lqYY6VAgMBAAECggEABZjAyYv2sCyQQ8pkkWcO4pSl8pFtxPBrtHqQRPOSNzFZ\nLNc1OHNCV9zBAw9BAimOlDNGkDBvMFcolxLhEwB4Ip0H1/90NTLL2FpKoX4rFyE8\nVAO9UmgmAxn63cRnYzr/ciohVJlG4EyyoeVHbFAMHNKvAICRa1QsS4SWGuOb8rpg\ncYzFAFW+eFVb/HHOeaPj3fmyNuRXGu9VdM0+K6uMxkEdu7M15xC7oc537fzHpnzk\ntzYM6uj4CPLfgQRqdep9Nn+niT4W0a/WONgz9qvrw9AQIUTWIUdInuEePr+pKN20\nWGt1rsS2DgPgg8cKb7pnrnosY8AhdRPfel5xJZ9jPQKBgQDZWjsrkut943WTnIaD\nN3nsUh2juxYj9b/xoT9IABB7HaBIes3OzpDnSY4df3tcHO8Jh0GConG4An3ab7X1\n5FXtaADyE7ZHsm8ENphLuArqyfH31WvCJCB9IQ+RPZWiGYhtNpglLdgGF3pzoeWK\nhD6EMA2RpNZ9zuY7cgWbuDnjPwKBgQDLTHF47ZTty9c61B4cuGY3dgv/Tv3SI88j\nE9ALu/+SJRHBY+ZcM94WupGoLzKLtEdW0Nhoa5qHpQKCxxmjLJ6zKpjr3KienKgZ\nWuuvehYS2RLJ1sl7xZrbcFJfgQfGyrBTfvCTXnJjMdNACNnUD4hglf+G3IZqY9FE\n7UhcYMXdKwKBgE5+m6fc41cPckLg4GM7Abkq3rFmu1Q5SByHU0c5XrpXtK74SqNJ\nTmN42O4mP/LAMEOMqUf4SoFdxP3CIkCvOakHSnAiVk4GTrmCzfVqfebVD6GlXck7\nKtCFxA175DIqbm6irMegiseIaxyfdzpTEBDFGeFjWmMM+XC2ePgHzEAZAoGAMAqV\neg0yt2sHJoi/wOu2g/6qYR/KjWEW7uQcstkvUNrfskKoSjubjOVzzDmzCR6GCTb7\nHNnov4s3562jGlNOAWrcjkgrtKeydaNttJ72Hmgbr4TJQi11JcwKOzVjoA9/0Yta\n0IhuIZDBqg0tZJZzFNf9dWIhhXynFFG6WtInj9cCgYB4VrcTpdN2GdOR0W4L8YOi\nONzthu+xV3LncK4BwFaRkZoKRtFdnP/CBeB5yUdW8fBr8MzmKolV0zO3XWlizzbY\nE7s/ssWLIgI5zFlq/zeSOHgWo8doV2RSd/TkobOgeND76oPUdzssADSYnqgWZUY2\ncOpgKUxdMuPnQMwCqdB5Ig==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-ac3qk@stocktrader-239615.iam.gserviceaccount.com",
+  "client_id": "111922335688965649338",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-ac3qk%40stocktrader-239615.iam.gserviceaccount.com"
+}
