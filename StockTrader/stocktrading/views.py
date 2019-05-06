@@ -20,7 +20,7 @@ db = firebase.database();
 auth = firebase.auth()
 # Create your views here.
 
-stocks = [
+stockSample = [
 	{
 		'symbol':'MSFT',
 		'price':'100.0'
@@ -38,15 +38,21 @@ stocks = [
 ]
 
 def home(request):
+	if(request.method == 'GET'):
+		print("GEt fuuuuuucked")
+		sym = request.GET.get('symbol', None)
+		if sym != None:
+			print(sym)
+			return redirect('stocktrading-stock', symbol = sym)
+
 	context ={
-		'stocks': stocks
+		'stocks': stockSample
 	}
 	parameters = {"api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX' , "symbol": 'AAPL'}
-	response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
-	result = json.loads(response.content.decode('utf-8'))
-	data = result['data'][0]['symbol'];
-	print(data)
-
+	#response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
+	#result = json.loads(response.content.decode('utf-8'))
+	#data = result['data'][0]['symbol'];
+	#print(data)
 	return render(request, 'stocktrading/home.html', context) #template subdirname/filename format
 
 def about(request):
@@ -99,3 +105,13 @@ def signup(request):
 	else:
 		form = SignupForm()
 		return render(request, 'stocktrading/signup.html', {'form':form})
+
+def stocks(request, symbol):
+	parameters = {"api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX' , "symbol": symbol}
+	response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
+	result = json.loads(response.content.decode('utf-8'))
+	data = result['data'][0]
+	context = {'symbol': data['symbol'], 'price': data['price'], 'name': data['name'], 'currency': data['currency'], 'day-high': data['day_high'], 'day-low': data['day_low'], 'day-change': data['day_change']}
+	return render(request, 'stocktrading/stock.html', context)
+
+
