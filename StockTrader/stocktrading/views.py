@@ -4,6 +4,7 @@ import pyrebase
 import os
 from .forms import SignupForm, LoginForm
 from django.contrib import messages
+import json
 
 config = {
   "apiKey": "AIzaSyAzXh-si71dEDldZkLmbY7l-_NZ8VJTfs4",
@@ -15,6 +16,7 @@ config = {
 
 firebase = pyrebase.initialize_app(config)
 db = firebase.database();
+auth = firebase.auth()
 # Create your views here.
 
 stocks = [
@@ -52,7 +54,9 @@ def login(request):
 		form = LoginForm(request.POST)
 		if form.is_valid():
 			email = form.cleaned_data.get('email')
+			password = form.cleaned_data.get('password')
 			messages.success(request, f'{email} has been logged in')
+			user = auth.sign_in_with_email_and_password(email, password)
 			return redirect('stocktrading-home')
 	else:
 		form = LoginForm()
@@ -63,7 +67,24 @@ def signup(request):
 	if request.method == 'POST':
 		form = SignupForm(request.POST)
 		if form.is_valid():
+			#read in form data
 			username = form.cleaned_data.get('name')
+			email = form.cleaned_data.get('email')
+			password = form.cleaned_data.get('password')
+
+			#create user and sign them in
+			auth.create_user_with_email_and_password(email, password)
+			user = auth.sign_in_with_email_and_password(email, password)
+
+			#get token and push related data
+			newUser = {"name": username, "email": email}
+			info = auth.get_account_info(user['idToken'])
+			userInfo = info['users']
+			userId = userInfo[0]['localId']
+			db.child("users").child(userId).set(newUser);
+
+
+			#return flash message and redirect
 			messages.success(request, f'Account created for {username}')
 			return redirect('stocktrading-home')
 	else:
