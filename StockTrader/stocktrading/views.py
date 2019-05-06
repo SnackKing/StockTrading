@@ -5,6 +5,7 @@ import os
 from .forms import SignupForm, LoginForm
 from django.contrib import messages
 import json
+import requests
 
 config = {
   "apiKey": "AIzaSyAzXh-si71dEDldZkLmbY7l-_NZ8VJTfs4",
@@ -37,11 +38,15 @@ stocks = [
 ]
 
 def home(request):
-	archer = {"name": "Sterling Archer", "agency": "Figgis Agency"}
-	#db.child("agents").set(archer)
 	context ={
 		'stocks': stocks
 	}
+	parameters = {"api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX' , "symbol": 'AAPL'}
+	response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
+	result = json.loads(response.content.decode('utf-8'))
+	data = result['data'][0]['symbol'];
+	print(data)
+
 	return render(request, 'stocktrading/home.html', context) #template subdirname/filename format
 
 def about(request):
@@ -55,8 +60,12 @@ def login(request):
 		if form.is_valid():
 			email = form.cleaned_data.get('email')
 			password = form.cleaned_data.get('password')
-			messages.success(request, f'{email} has been logged in')
 			user = auth.sign_in_with_email_and_password(email, password)
+			info = auth.get_account_info(user['idToken'])
+			userid = info['users'][0]['localId']
+			user = db.child("users").child(userid).get();
+			name = user.val()['name']
+			messages.success(request, f'{name} has been logged in')
 			return redirect('stocktrading-home')
 	else:
 		form = LoginForm()
