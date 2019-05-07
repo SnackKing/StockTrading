@@ -29,8 +29,12 @@
 	        </div>
 	        <!-- Navbar Right Side -->
 	        <div class="navbar-nav">
-	          <a class="nav-item nav-link" href="{% url 'stocktrading-login' %}">Login</a>
-	          <a class="nav-item nav-link" href="{% url 'stocktrading-signup' %}">Register</a>
+	          {% if uid == None %}
+		          <a class="nav-item nav-link" href="{% url 'stocktrading-login' %}">Login</a>
+		          <a class="nav-item nav-link" href="{% url 'stocktrading-signup' %}">Register</a>
+	          {% else %}
+	          		<a class="nav-item nav-link" href="{% url 'stocktrading-login' %}">{{user.name}}</a>
+	          {% endif %}
 	        </div>
 	      </div>
 	    </div>

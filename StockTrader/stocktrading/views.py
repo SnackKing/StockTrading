@@ -8,7 +8,6 @@ import json
 import requests
 from datetime import date, datetime, timedelta
 
-
 config = {
     "apiKey": "AIzaSyAzXh-si71dEDldZkLmbY7l-_NZ8VJTfs4",
     "authDomain": "stocktrader-239615.firebaseapp.com",
@@ -41,23 +40,31 @@ stockSample = [
 
 
 def home(request):
+    uid = None
+    if 'uid' in request.session:
+        uid = request.session['uid']
+    user = None;
+    if uid != None:
+        user = db.child('users').child(uid).get().val();
+        print(user);
     if(request.method == 'GET'):
-        print("GEt fuuuuuucked")
         sym = request.GET.get('symbol', None)
         if sym != None:
-            print(sym)
             return redirect('stocktrading-stock', symbol=sym)
 
     context = {
-        'stocks': stockSample
+        'stocks': stockSample,
+        'uid': uid,
+        'user': user
     }
     parameters = {
         "api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX', "symbol": 'AAPL'}
-    #response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
-    #result = json.loads(response.content.decode('utf-8'))
-    #data = result['data'][0]['symbol'];
+    # response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
+    # result = json.loads(response.content.decode('utf-8'))
+    # data = result['data'][0]['symbol'];
     # print(data)
     # template subdirname/filename format
+    print(uid)
     return render(request, 'stocktrading/home.html', context)
 
 
@@ -76,6 +83,7 @@ def login(request):
             user = auth.sign_in_with_email_and_password(email, password)
             info = auth.get_account_info(user['idToken'])
             userid = info['users'][0]['localId']
+            request.session['uid'] = userid
             user = db.child("users").child(userid).get()
             name = user.val()['name']
             messages.success(request, f'{name} has been logged in')
@@ -99,10 +107,11 @@ def signup(request):
             user = auth.sign_in_with_email_and_password(email, password)
 
             # get token and push related data
-            newUser = {"name": username, "email": email}
+            newUser = {"name": username, "email": email, "balance":500}
             info = auth.get_account_info(user['idToken'])
             userInfo = info['users']
             userId = userInfo[0]['localId']
+            request.session['uid'] = userid
             db.child("users").child(userId).set(newUser)
 
             # return flash message and redirect
@@ -114,6 +123,8 @@ def signup(request):
 
 
 def stocks(request, symbol):
+    uid = request.session["uid"]
+    print(uid)
     parameters = {
         "api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX', "symbol": symbol}
     response = requests.get(
@@ -134,9 +145,6 @@ def stocks(request, symbol):
     for day, stats in filtered.items():
         priceList.append(stats['close'])
         dayList.append(day)
-    print(priceList)
-    print(dayList)
-    stuff = [5, 2, 4, 5, 3]
     context = {'symbol': symbol, 'price': data['price'], 'name': data['name'], 'currency': data['currency'], 'day_high': data['day_high'],
                'day-low': data['day_low'], 'day_change': data['day_change'], 'change_pct': data['change_pct'], 'points': priceList, 'dayLabels': dayList}
     return render(request, 'stocktrading/stock.html', context)
