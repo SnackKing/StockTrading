@@ -2,35 +2,62 @@
 {% block content %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js" type="text/javascript"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
 <div class = "container">
 	<h2>{{name}} ({{symbol}})</h2>
 	<h4>{{price}} {{currency}}</h4>
 	<h6>Today's Change: {{day_change}}</h6>
 	<h6>Change in %: {{change_pct}}</h6>
-<script type="text/javascript">
-$( document ).ready(function() {
-    var data = {
-        labels: ['1', '5', '10', '15', '20', '25', '30'],
-        datasets: [
-            {
-                label: "Site Registrations in the Last 30 Days",
-                fillColor: "rgba(220,220,220,0.2)",
-                strokeColor: "rgba(220,220,220,1)",
-                pointColor: "rgba(220,220,220,1)",
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(220,220,220,1)",
-                data: {{points}}
+<canvas id="myChart" width="400" height="200"></canvas>
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels:  [{% for i in dayLabels %}'{{ i }}',{% endfor %}],
+        datasets: [{
+            label: '# of Votes',
+            data: [{% for i in points %}{{ i }},{% endfor %}],
+            backgroundColor: 'rgb(95,120,138,0.1)',
+            borderColor: 'rgba(95,120,138,0.8)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: false
+                }
+            }]
+        },
+        tooltips: {
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    var label = "Price";
+
+                    if (label) {
+                        label += ': ';
+                    }
+                    label += tooltipItem.yLabel;
+                    return label;
+                }
             }
-        ]
-    };
-    var ctx = document.getElementById("myChart").getContext("2d");
-    var myLineChart = new Chart(ctx).Line(data);
+        },
+        legend: {
+            display: false,
+            labels: {
+                fontColor: 'rgb(255, 99, 132)'
+            }
+        },
+         title: {
+            display: true,
+            text: 'Price History for {{name}}',
+            fontSize: 18
+        }
+    }
 });
 </script>
-<canvas id="myChart" width="500" height="300"></canvas>
-
-
 		
 </div>
 {% endblock content %}

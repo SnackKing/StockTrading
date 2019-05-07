@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'stocktrading.apps.StocktradingConfig',
     'django.contrib.admin',
     'django.contrib.auth',
+    'chartjs',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
