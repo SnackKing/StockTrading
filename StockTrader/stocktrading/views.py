@@ -111,7 +111,8 @@ def stocks(request, symbol):
 	response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
 	result = json.loads(response.content.decode('utf-8'))
 	data = result['data'][0]
-	context = {'symbol': data['symbol'], 'price': data['price'], 'name': data['name'], 'currency': data['currency'], 'day-high': data['day_high'], 'day-low': data['day_low'], 'day-change': data['day_change']}
+	stuff = [5,2,4,5,3];
+	context = {'symbol': data['symbol'], 'price': data['price'], 'name': data['name'], 'currency': data['currency'], 'day_high': data['day_high'], 'day-low': data['day_low'], 'day_change': data['day_change'], 'change_pct': data['change_pct'], 'points':stuff}
 	return render(request, 'stocktrading/stock.html', context)
 
 
