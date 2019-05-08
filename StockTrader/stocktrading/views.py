@@ -174,8 +174,17 @@ def add(request):
     return JsonResponse(data)
 
 def buy(request,symbol):
-    print(request.POST.get("count"))
-    return redirect('stocktrading-home')
+    count = request.POST.get("count")
+    uid = request.session['uid']
+    user = db.child("users").child(uid).get().val();
+    if ('owned' not in user) or (symbol not in user['owned']):
+        db.child("users").child(uid).child("owned").update({symbol:count})
+    else:
+        owned = db.child("users").child(uid).child("owned").child(symbol).get().val();
+        newCount = owned + count;
+        db.child("users").child(uid).child("owned").update({symbol: newCount})
+    messages.success(request, f'You bought {count} shares of {symbol}')
+    return redirect('stocktrading-stock', symbol = symbol)
 
 def sell(request,symbol):
     return redirect('stocktrading-home')

@@ -65,6 +65,26 @@ var myChart = new Chart(ctx, {
     }
 });
 </script>
+
+ <div class = 'mt-3 mb-3'>
+        <form  method = "post" class="form-inline" action = "{% url 'stocktrading-stock-buy' symbol=symbol %}">
+          {% csrf_token %}       
+          <i class="" aria-hidden="true"></i>
+          <input name="symbol" type="hidden" value="{{symbol}}" />
+          <input id = "buy" class="form-control w-25" type="text" placeholder="Number of Shares" aria-label="buy" name = "count">
+          <input id = "buybtn" type = "submit" value = "Buy" class = "btn btn-primary ml-1 bg-steel" >
+        </form>
+</div>
+
+<div class = 'mt-3 mb-3'>
+        <form method = "post" class="form-inline" action = "{% url 'stocktrading-stock-sell' symbol=symbol %}">
+           {% csrf_token %}       
+          <i class="" aria-hidden="true"></i>
+          <input name="symbol" type="hidden" value="{{ symbol }}" />
+          <input id = "sell" class="form-control w-25" type="text" placeholder="Number of Shares" aria-label="sell" name = "count">
+          <input id = "buybtn" type = "submit" value = "Sell" class = "btn btn-primary ml-1 bg-steel" >
+        </form>
+</div>
 <script>
 $('#like').click(function(){
     var val = $(this).val();
@@ -90,26 +110,18 @@ $('#like').click(function(){
                 }
           }); 
     })
-</script>
- <div class = 'mt-3 mb-3'>
-        <form  method = "post" class="form-inline" action = "{% url 'stocktrading-stock-buy' symbol=symbol %}">
-          {% csrf_token %}       
-          <i class="" aria-hidden="true"></i>
-          <input name="symbol" type="hidden" value="{{symbol}}" />
-          <input class="form-control w-25" type="text" placeholder="Number of Shares" aria-label="buy" name = "count">
-          <input type = "submit" value = "Buy" class = "btn btn-primary ml-1 bg-steel" >
-        </form>
-</div>
+$("#buy").on('input', function() {
+   var cost = $(this).val() * {{price}}
+   console.log(cost);
+   if(cost > {{user.balance}}) {
+        document.getElementById("buybtn").disabled = true;
+   }
+   else{
+        document.getElementById("buybtn").disabled = false;
+   }
 
-<div class = 'mt-3 mb-3'>
-        <form method = "post" class="form-inline" action = "{% url 'stocktrading-stock-sell' symbol=symbol %}">
-           {% csrf_token %}       
-          <i class="" aria-hidden="true"></i>
-          <input name="symbol" type="hidden" value="{{ symbol }}" />
-          <input class="form-control w-25" type="text" placeholder="Number of Shares" aria-label="sell" name = "count">
-          <input type = "submit" value = "Sell" class = "btn btn-primary ml-1 bg-steel" >
-        </form>
-</div>
+});
+</script>
 		
 </div>
 {% endblock content %}
