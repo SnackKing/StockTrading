@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import pyrebase
 import os
 from .forms import SignupForm, LoginForm
@@ -7,6 +7,8 @@ from django.contrib import messages
 import json
 import requests
 from datetime import date, datetime, timedelta
+from django.views.decorators.csrf import csrf_exempt
+
 
 config = {
     "apiKey": "AIzaSyAzXh-si71dEDldZkLmbY7l-_NZ8VJTfs4",
@@ -148,3 +150,13 @@ def stocks(request, symbol):
     context = {'symbol': symbol, 'price': data['price'], 'name': data['name'], 'currency': data['currency'], 'day_high': data['day_high'],
                'day-low': data['day_low'], 'day_change': data['day_change'], 'change_pct': data['change_pct'], 'points': priceList, 'dayLabels': dayList}
     return render(request, 'stocktrading/stock.html', context)
+
+@csrf_exempt
+def add(request):
+    symbol = request.POST.get("symbol")
+    uid = request.session['uid']
+    print("HOWDY YALL")
+    db.child("users").child(uid).child("added").update({"symbol": symbol})
+    data = {"lol": "lol"}
+    return JsonResponse(data)
+
