@@ -42,7 +42,6 @@ stockSample = [
 
 
 def home(request):
-    uid = None
     if 'uid' in request.session:
         uid = request.session['uid']
     user = None;
@@ -53,20 +52,24 @@ def home(request):
         sym = request.GET.get('symbol', None)
         if sym != None:
             return redirect('stocktrading-stock', symbol=sym)
-
-    context = {
-        'stocks': stockSample,
-        'uid': uid,
-        'user': user
-    }
+    stocks = ""
+    if user != None:
+        for stock in user['added']:
+            stocks += str(stock)
+            stocks += ","
+    stocks = stocks[:-1]
+    print(stocks)
     parameters = {
-        "api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX', "symbol": 'AAPL'}
-    # response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
-    # result = json.loads(response.content.decode('utf-8'))
-    # data = result['data'][0]['symbol'];
-    # print(data)
-    # template subdirname/filename format
-    print(uid)
+        "api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX', "symbol": stocks}
+    response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
+    result = json.loads(response.content.decode('utf-8'))
+    data = result['data']
+    print(data)
+    context = {
+        'user': user,
+        'uid': uid,
+        'stocks': data
+    }
     return render(request, 'stocktrading/home.html', context)
 
 
@@ -125,8 +128,10 @@ def signup(request):
 
 
 def stocks(request, symbol):
-    uid = request.session["uid"]
-    print(uid)
+    uid = None
+    if 'uid' not in request.session:
+        return redirect('stocktrading-home')
+    uid = request.session['uid']
     parameters = {
         "api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX', "symbol": symbol}
     response = requests.get(
@@ -147,16 +152,31 @@ def stocks(request, symbol):
     for day, stats in filtered.items():
         priceList.append(stats['close'])
         dayList.append(day)
+    user = db.child("users").child(uid).get().val();
+    print(user)
     context = {'symbol': symbol, 'price': data['price'], 'name': data['name'], 'currency': data['currency'], 'day_high': data['day_high'],
-               'day-low': data['day_low'], 'day_change': data['day_change'], 'change_pct': data['change_pct'], 'points': priceList, 'dayLabels': dayList}
+               'day-low': data['day_low'], 'day_change': data['day_change'], 'change_pct': data['change_pct'], 'points': priceList, 'dayLabels': dayList, 'user': user}
     return render(request, 'stocktrading/stock.html', context)
 
 @csrf_exempt
 def add(request):
     symbol = request.POST.get("symbol")
+    val = request.POST.get("value")
     uid = request.session['uid']
-    print("HOWDY YALL")
-    db.child("users").child(uid).child("added").update({"symbol": symbol})
-    data = {"lol": "lol"}
+    newVal = ""
+    if val == "Watch":
+        db.child("users").child(uid).child("added").update({symbol: "doggo"})
+        newVal = "Stop Watching"
+    else:
+        db.child("users").child(uid).child("added").child(symbol).remove()
+        newVal = "Watch"
+    data = {"newVal": newVal}
     return JsonResponse(data)
+
+def buy(request,symbol):
+    print(request.POST.get("count"))
+    return redirect('stocktrading-home')
+
+def sell(request,symbol):
+    return redirect('stocktrading-home')
 
