@@ -1,1 +1,1 @@
-web: gunicorn tradetester:app
+web: gunicorn StockTrader:app
