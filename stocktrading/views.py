@@ -118,7 +118,7 @@ def signup(request):
             info = auth.get_account_info(user['idToken'])
             userInfo = info['users']
             userId = userInfo[0]['localId']
-            request.session['uid'] = userid
+            request.session['uid'] = userId
             db.child("users").child(userId).set(newUser)
 
             # return flash message and redirect
