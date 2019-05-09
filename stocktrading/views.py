@@ -42,24 +42,26 @@ stockSample = [
 
 
 def home(request):
+    uid = None
     if 'uid' in request.session:
         uid = request.session['uid']
     user = None;
-    uid = 'None'
+    print('HOME UID')
+    print(uid)
     if uid != None:
         user = db.child('users').child(uid).get().val();
-        print(user);
+    print(user);
     if(request.method == 'GET'):
         sym = request.GET.get('symbol', None)
         if sym != None:
             return redirect('stocktrading-stock', symbol=sym)
     stocks = "FB"
-    if user != None:
+    if (user != None) and 'added' in user:
         stocks = ""
         for stock in user['added']:
             stocks += str(stock)
             stocks += ","
-    stocks = stocks[:-1]
+        stocks = stocks[:-1]
     print(stocks)
     parameters = {
         "api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX', "symbol": stocks}
@@ -91,6 +93,8 @@ def login(request):
             info = auth.get_account_info(user['idToken'])
             userid = info['users'][0]['localId']
             request.session['uid'] = userid
+            print("YOUR UID")
+            print(request.session['uid'])
             user = db.child("users").child(userid).get()
             name = user.val()['name']
             messages.success(request, f'{name} has been logged in')
