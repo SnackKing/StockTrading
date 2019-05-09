@@ -1,1 +1,1 @@
-web: gunicorn StockTrader:app
+web: gunicorn StockTrader.wsgi
