@@ -1,1 +1,1 @@
-web: gunicorn tradetester.wsgi
+web: gunicorn tradetester:app
