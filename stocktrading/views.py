@@ -53,8 +53,9 @@ def home(request):
         sym = request.GET.get('symbol', None)
         if sym != None:
             return redirect('stocktrading-stock', symbol=sym)
-    stocks = ""
+    stocks = "FB"
     if user != None:
+        stocks = ""
         for stock in user['added']:
             stocks += str(stock)
             stocks += ","
