@@ -45,6 +45,7 @@ def home(request):
     if 'uid' in request.session:
         uid = request.session['uid']
     user = None;
+    uid = 'None'
     if uid != None:
         user = db.child('users').child(uid).get().val();
         print(user);
