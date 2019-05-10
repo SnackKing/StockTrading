@@ -5,16 +5,16 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
 <div class = "container">
     <div class = "row">
-	<h2>{{name}} ({{symbol}})</h2>
+	<h2>{{stock.name}} ({{stock.symbol}})</h2>
     {% if symbol in user.added %}
         <input type="button" id="like" name="Like" value="Stop Watching" class = "btn btn-primary ml-4 bg-steel" />
     {% else %}
         <input type="button" id="like" name="Like" value="Watch" class = 'btn btn-primary ml-4 bg-steel' />
     {% endif %}
     </div>
-	<h4>{{price}} {{currency}}</h4>
-	<h6>Today's Change: {{day_change}}</h6>
-	<h6>Change in %: {{change_pct}}</h6>
+	<h4>{{stock.price}} {{stock.currency}}</h4>
+	<h6>Today's Change: {{stock.day_change}}</h6>
+	<h6>Change in %: {{stock.change_pct}}</h6>
 <canvas id="myChart" width="400" height="200"></canvas>
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');
@@ -59,32 +59,37 @@ var myChart = new Chart(ctx, {
         },
          title: {
             display: true,
-            text: 'Price History for {{name}}',
+            text: 'Price History for {{stock.name}}',
             fontSize: 18
         }
     }
 });
 </script>
-
+<h6> Your balance: {{user.balance}} </h3>
  <div class = 'mt-3 mb-3'>
         <form  method = "post" class="form-inline" action = "{% url 'stocktrading-stock-buy' symbol=symbol %}">
           {% csrf_token %}       
           <i class="" aria-hidden="true"></i>
-          <input name="symbol" type="hidden" value="{{symbol}}" />
+          <input name="price" type="hidden" value="{{stock.price}}" />
           <input id = "buy" class="form-control w-25" type="text" placeholder="Number of Shares" aria-label="buy" name = "count">
           <input id = "buybtn" type = "submit" value = "Buy" class = "btn btn-primary ml-1 bg-steel" >
         </form>
 </div>
-
-<div class = 'mt-3 mb-3'>
+{% if owned %}
+  <h6> You own {{numShares}} shares of {{symbol}} </h6>
+    <div class = 'mt-3 mb-3'>
         <form method = "post" class="form-inline" action = "{% url 'stocktrading-stock-sell' symbol=symbol %}">
            {% csrf_token %}       
           <i class="" aria-hidden="true"></i>
-          <input name="symbol" type="hidden" value="{{ symbol }}" />
+          <input name="price" type="hidden" value="{{ stock.price }}" />
           <input id = "sell" class="form-control w-25" type="text" placeholder="Number of Shares" aria-label="sell" name = "count">
           <input id = "buybtn" type = "submit" value = "Sell" class = "btn btn-primary ml-1 bg-steel" >
         </form>
 </div>
+{% else %}
+ <h6> You don't own any shares of {{symbol}} </h3>
+{% endif %}
+
 <script>
 $('#like').click(function(){
     var val = $(this).val();

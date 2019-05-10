@@ -159,9 +159,15 @@ def stocks(request, symbol):
         priceList.append(stats['close'])
         dayList.append(day)
     user = db.child("users").child(uid).get().val();
+    owned = False;
+    if ('owned' in user) and (symbol in user['owned']):
+        owned = True
+    numShares = 0
+    if owned:
+        numShares = user['owned'][symbol]
+
     print(user)
-    context = {'symbol': symbol, 'price': data['price'], 'name': data['name'], 'currency': data['currency'], 'day_high': data['day_high'],
-               'day-low': data['day_low'], 'day_change': data['day_change'], 'change_pct': data['change_pct'], 'points': priceList, 'dayLabels': dayList, 'user': user}
+    context = {'symbol': symbol, 'stock': data, 'points': priceList, 'dayLabels': dayList, 'user': user, 'owned': owned, 'numShares': numShares}
     return render(request, 'stocktrading/stock.html', context)
 
 @csrf_exempt
@@ -180,9 +186,16 @@ def add(request):
     return JsonResponse(data)
 
 def buy(request,symbol):
+    #number of shares that user entered
     count = request.POST.get("count")
+    #hidden form element
+    price = request.POST.get("price")
     uid = request.session['uid']
     user = db.child("users").child(uid).get().val();
+    #update user balance
+    newBalance = user['balance'] - (price * count)
+    db.child("users").child(uid).update({'balance':newBalance})
+    #update user stock count if they already own that stock, otherwise create new entry
     if ('owned' not in user) or (symbol not in user['owned']):
         db.child("users").child(uid).child("owned").update({symbol:count})
     else:
