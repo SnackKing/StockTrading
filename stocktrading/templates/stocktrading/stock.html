@@ -65,7 +65,7 @@ var myChart = new Chart(ctx, {
     }
 });
 </script>
-<h6> Your balance: {{user.balance}} </h3>
+<h6> Your balance: ${{user.balance}} </h3>
  <div class = 'mt-3 mb-3'>
         <form  method = "post" class="form-inline" action = "{% url 'stocktrading-stock-buy' symbol=symbol %}">
           {% csrf_token %}       
@@ -116,7 +116,7 @@ $('#like').click(function(){
           }); 
     })
 $("#buy").on('input', function() {
-   var cost = $(this).val() * {{price}}
+   var cost = $(this).val() * {{stock.price}}
    console.log(cost);
    if(cost > {{user.balance}}) {
         document.getElementById("buybtn").disabled = true;

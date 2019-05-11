@@ -193,14 +193,14 @@ def buy(request,symbol):
     uid = request.session['uid']
     user = db.child("users").child(uid).get().val();
     #update user balance
-    newBalance = user['balance'] - (price * count)
+    newBalance = round(float(user['balance']) - (float(price) * float(count)),2)
     db.child("users").child(uid).update({'balance':newBalance})
     #update user stock count if they already own that stock, otherwise create new entry
     if ('owned' not in user) or (symbol not in user['owned']):
         db.child("users").child(uid).child("owned").update({symbol:count})
     else:
         owned = db.child("users").child(uid).child("owned").child(symbol).get().val();
-        newCount = owned + count;
+        newCount = int(owned) + int(count);
         db.child("users").child(uid).child("owned").update({symbol: newCount})
     messages.success(request, f'You bought {count} shares of {symbol}')
     return redirect('stocktrading-stock', symbol = symbol)
