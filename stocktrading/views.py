@@ -160,7 +160,7 @@ def stocks(request, symbol):
         dayList.append(day)
     user = db.child("users").child(uid).get().val();
     owned = False;
-    if ('owned' in user) and (symbol in user['owned']):
+    if ('owned' in user) and (symbol in user['owned']) and (user['owned'][symbol] != 0):
         owned = True
     numShares = 0
     if owned:
@@ -206,5 +206,21 @@ def buy(request,symbol):
     return redirect('stocktrading-stock', symbol = symbol)
 
 def sell(request,symbol):
-    return redirect('stocktrading-home')
-
+    #number of shares that user entered
+    count = request.POST.get("count")
+    #hidden form element
+    price = request.POST.get("price")
+    uid = request.session['uid']
+    user = db.child("users").child(uid).get().val();
+    #update user balance
+    newBalance = round(float(user['balance']) + (float(price) * float(count)),2)
+    db.child("users").child(uid).update({'balance':newBalance})
+    #update user stock count if they already own that stock, otherwise create new entry
+    if ('owned' not in user) or (symbol not in user['owned']):
+        db.child("users").child(uid).child("owned").update({symbol:count})
+    else:
+        owned = db.child("users").child(uid).child("owned").child(symbol).get().val();
+        newCount = int(owned) - int(count);
+        db.child("users").child(uid).child("owned").update({symbol: newCount})
+    messages.success(request, f'You sold {count} shares of {symbol}')
+    return redirect('stocktrading-stock', symbol = symbol)
