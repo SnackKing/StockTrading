@@ -1,6 +1,6 @@
 {% extends "stocktrading/base.html" %}
 {% block content %}
-<h1>Zach's Stock Trading</h1>
+<h2>{{user.name}}'s Stock Trading</h2>
 <div class="row">
    <div class="col-md-8">
 	   	<!-- Search form -->
@@ -37,8 +37,8 @@
          {% else %}
 	         <p class='text-muted'>Stocks you own: 
 	         <ul class="list-group">
-	         	{% for stock in user.owned %}
-	            <li class="list-group-item list-group-item-light">{{stock.symbol}}: {{stock.price}}</li>
+	         	{% for key, value in owned.items %}
+	            <li class="list-group-item list-group-item-light">{{value.symbol}}: ${{value.price}} ({{value.day_change}})</li>
 	            {% endfor %}
 	         </ul>
 	         </p>

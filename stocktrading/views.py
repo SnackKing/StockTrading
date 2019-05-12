@@ -68,14 +68,22 @@ def home(request):
     response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
     result = json.loads(response.content.decode('utf-8'))
     data = result['data']
-    print(data)
+    ownedStocks = getOwnedStocks(data, user)
+    print(ownedStocks)
     context = {
         'user': user,
         'uid': uid,
-        'stocks': data
+        'stocks': data,
+        'owned': ownedStocks
     }
     return render(request, 'stocktrading/home.html', context)
 
+def getOwnedStocks(data, user):
+    owned = {}
+    for item in data:
+        if item['symbol'] in user['owned']:
+            owned[item['symbol']] = item
+    return owned
 
 def about(request):
     context = {
