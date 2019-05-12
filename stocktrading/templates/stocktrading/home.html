@@ -11,7 +11,6 @@
 		  <input type = "submit" value = "Search" class = "btn btn-primary ml-1 bg-steel" >
 		</form>
 	</div>
-	  {% if user != None %}
 	      {% for stock in stocks %}
 	      <article class="media content-section">
 	         <div class="media-body">
@@ -24,12 +23,8 @@
 	         </div>
 	      </article>
 	      {% endfor %}
-      {% else %}
-      <p> Sign up or Log in to track stocks </p>
-      {% endif %}
    </div>
    <div class="col-md-4">
-   	{% if user != None %}
       <div class="content-section">
          <h3>Balance: ${{user.balance}}</h3>
          {% if not user.owned %}
@@ -45,6 +40,5 @@
          {% endif %}
       </div>
    </div>
-     {% endif %}
 </div>
 {% endblock content %}

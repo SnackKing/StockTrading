@@ -42,15 +42,12 @@ stockSample = [
 
 
 def home(request):
-    uid = None
-    if 'uid' in request.session:
-        uid = request.session['uid']
-    user = None;
+    if 'uid' not in request.session:
+        return redirect('stocktrading-landing')
+    uid = request.session['uid']
     print('HOME UID')
     print(uid)
-    if uid != None:
-        user = db.child('users').child(uid).get().val();
-    print(user);
+    user = db.child('users').child(uid).get().val();
     if(request.method == 'GET'):
         sym = request.GET.get('symbol', None)
         if sym != None:
@@ -69,7 +66,6 @@ def home(request):
     result = json.loads(response.content.decode('utf-8'))
     data = result['data']
     ownedStocks = getOwnedStocks(data, user)
-    print(ownedStocks)
     context = {
         'user': user,
         'uid': uid,
@@ -232,3 +228,6 @@ def sell(request,symbol):
         db.child("users").child(uid).child("owned").update({symbol: newCount})
     messages.success(request, f'You sold {count} shares of {symbol}')
     return redirect('stocktrading-stock', symbol = symbol)
+
+def landing(request):
+    return render(request, 'stocktrading/landing.html')
