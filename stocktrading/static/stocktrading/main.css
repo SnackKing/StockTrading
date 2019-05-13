@@ -12,8 +12,8 @@ ul {
   margin: 0;
 }
 
-.bg-steel {
-  background-color: #5f788a;
+.bg-green {
+  background-color: #85bb65;
 }
 
 .site-header .navbar-nav .nav-link {
@@ -86,6 +86,26 @@ a.article-title:hover {
 .form-input {
   margin: 2em;
 }
-.login-buton{
-  color:;
+
+.login-buton {
+  background-color:#85bb65;
+}
+
+.invisibile {
+  visibility: hidden;
+}
+
+.visible {
+  visibility:visible;
+}
+
+.blacklink {
+  color: black;
+}
+.nav-menu {
+  background-color: white;
+  color: black;
+}
+.whitebutton{
+  background-color: white; 
 }

@@ -9,7 +9,9 @@ urlpatterns = [
     path('ajax/addremove/', views.add, name='add-remove-stock'),
     path('stocks/<str:symbol>/buy/', views.buy, name = 'stocktrading-stock-buy'),
     path('stocks/<str:symbol>/sell/', views.sell, name = 'stocktrading-stock-sell'),
-    path('landing/', views.landing, name = "stocktrading-landing")
+    path('landing/', views.landing, name = "stocktrading-landing"),
+    path('account/',views.account, name = "stocktrading-account"),
+    path('transactions', views.transactions, name = "stocktrading-transactions"),
 
 
 ]

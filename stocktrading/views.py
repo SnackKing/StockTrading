@@ -206,6 +206,7 @@ def buy(request,symbol):
         owned = db.child("users").child(uid).child("owned").child(symbol).get().val();
         newCount = int(owned) + int(count);
         db.child("users").child(uid).child("owned").update({symbol: newCount})
+    addBuyOrder(count, price, user, symbol, uid)
     messages.success(request, f'You bought {count} shares of {symbol}')
     return redirect('stocktrading-stock', symbol = symbol)
 
@@ -226,8 +227,29 @@ def sell(request,symbol):
         owned = db.child("users").child(uid).child("owned").child(symbol).get().val();
         newCount = int(owned) - int(count);
         db.child("users").child(uid).child("owned").update({symbol: newCount})
+    addSellOrder(count,price,user,symbol,uid)
     messages.success(request, f'You sold {count} shares of {symbol}')
     return redirect('stocktrading-stock', symbol = symbol)
 
 def landing(request):
-    return render(request, 'stocktrading/landing.html')
+    return render(request, 'stocktrading/landing.html', {'user': None})
+
+
+def addBuyOrder(count, price, user, symbol,uid):
+    timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
+    db.child("users").child(uid).child('orders').child('buy').child(symbol).child(timestamp).set({'symbol':symbol, 'numShares': count, 'price': price})
+
+def addSellOrder(count, price, user, symbol,uid):
+    timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
+    db.child("users").child(uid).child('orders').child('sell').child(symbol).child(timestamp).set({'symbol':symbol, 'numShares': count, 'price': price})
+
+def account(request):
+    uid = request.session['uid']
+    user = db.child('users').child(uid).get().val();
+    return render(request, 'stocktrading/account.html', {'user': user})
+
+def transactions(request):
+    return render(request, 'stocktrading/transactions.html')
+
+
+
