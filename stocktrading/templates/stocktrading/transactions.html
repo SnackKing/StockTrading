@@ -2,6 +2,69 @@
 {% block content %}
 
 <div class = "container">
+	<div id="myButtons" class="btn-group" data-toggle="buttons">
+  <label class="btn btn-primary active">
+    <input type="radio" name="options" id="buy" autocomplete="off" checked> Bought
+  </label>
+  <label class="btn btn-primary">
+    <input type="radio" name="options" id="sell" autocomplete="off"> Sold
+  </label>
 </div>
+	<div id = "bought">
+		{% if transactions.buys %}
 
+			{% for key, value in transactions.buys.items %}
+ 			<article class="media content-section">
+		         <div class="media-body">
+		            <div class="article-metadata">
+		               <a class="mr-2" href="stocks/{{stock.symbol}}">{{ value.symbol }}</a>
+		               <small class="text-muted">Bought on {{key}}</small>
+		            </div>
+		            <p class="article-content">Price per share: {{value.price}}</p>
+		            <p class="article-content">Number of Shares: {{value.numShares}}</p>
+		         </div>
+	      	</article>			
+	        {% endfor %}
+
+		{% else %}
+			<h4> You haven't bought any stocks </h4>
+		{% endif %}
+	</div>
+	<div id = "sold">
+		{% if transactions.sells %}
+
+			{% for key, value in transactions.sells.items %}
+			<article class="media content-section">
+		         <div class="media-body">
+		            <div class="article-metadata">
+		               <a class="mr-2" href="stocks/{{stock.symbol}}">{{ value.symbol }}</a>
+		               <small class="text-muted">Sold on {{key}}</small>
+		            </div>
+		            <p class="article-content">Price per share: {{value.price}}</p>
+		            <p class="article-content">Number of Shares: {{value.numShares}}</p>
+		         </div>
+	      	</article>						
+	      {% endfor %}
+
+		{% else %}
+			<h4> You haven't sold any stocks </h4>
+		{% endif %}
+	</div>
+</div>
+<script>
+	$(function() {
+    	$("#sold").hide();
+	});
+	$("#myButtons :input").change(function() {
+	    console.log(this.id); // points to the clicked input button
+	    if(this.id == "buy"){
+	    	$("#bought").show();
+	    	$("#sold").hide()
+	    }
+	    else{
+	    	$("#sold").show()
+	    	$("#bought").hide();
+	    }
+	});
+</script>
 {% endblock content %}

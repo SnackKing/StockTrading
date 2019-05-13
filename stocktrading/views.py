@@ -58,6 +58,10 @@ def home(request):
         for stock in user['added']:
             stocks += str(stock)
             stocks += ","
+        if 'owned' in user:
+            for stock in user['owned']:
+                stocks += str(stock)
+                stocks += ","
         stocks = stocks[:-1]
     print(stocks)
     parameters = {
@@ -237,11 +241,11 @@ def landing(request):
 
 def addBuyOrder(count, price, user, symbol,uid):
     timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
-    db.child("users").child(uid).child('orders').child('buy').child(symbol).child(timestamp).set({'symbol':symbol, 'numShares': count, 'price': price})
+    db.child("users").child(uid).child('orders').child('buy').child(timestamp).set({'symbol':symbol, 'numShares': count, 'price': price})
 
 def addSellOrder(count, price, user, symbol,uid):
     timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
-    db.child("users").child(uid).child('orders').child('sell').child(symbol).child(timestamp).set({'symbol':symbol, 'numShares': count, 'price': price})
+    db.child("users").child(uid).child('orders').child('sell').child(timestamp).set({'symbol':symbol, 'numShares': count, 'price': price})
 
 def account(request):
     uid = request.session['uid']
@@ -249,7 +253,27 @@ def account(request):
     return render(request, 'stocktrading/account.html', {'user': user})
 
 def transactions(request):
-    return render(request, 'stocktrading/transactions.html')
+    if 'uid' not in request.session:
+        return redirect('stocktrading-landing')
+    uid = request.session['uid']
+    user = db.child('users').child(uid).get().val();
+    transactions = {};
+    if 'orders' in user:
+        buys = {}
+        if 'buy' in user['orders']:
+            for key, value in user['orders']['buy'].items():
+                buys[key] = value
+            print(buys)
+            transactions["buys"] = buys
+        if 'sell' in user['orders']:
+            sells = {}
+            for key,value in user['orders']['sell'].items():
+                sells[key] = value
+            print(sells)
+            transactions["sells"] = sells;
+
+
+    return render(request, 'stocktrading/transactions.html', {'transactions': transactions})
 
 
 

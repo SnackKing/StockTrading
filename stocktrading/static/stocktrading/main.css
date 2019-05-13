@@ -92,7 +92,7 @@ a.article-title:hover {
 }
 
 .invisibile {
-  visibility: hidden;
+  display: none !important;
 }
 
 .visible {
