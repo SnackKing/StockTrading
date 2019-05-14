@@ -41,7 +41,7 @@ def home(request):
     stocks = ""
 
     #get all owned and tracked stocks
-    if 'added' in user or :
+    if 'added' in user:
         stocks = ""
         #get all tracked stocks
         for stock in user['added']:
@@ -54,7 +54,7 @@ def home(request):
             stocks += ","
 
     #if at lease one stock was added, cut off extra trailing ','
-    stocks = stocks[:-1] if stocks != ""
+    stocks = stocks[:-1] if stocks != "" else stocks
 
     #if the user had at least one stock, then make an api call for the requested stocks
     data = []
@@ -185,13 +185,20 @@ def stocks(request, symbol):
     returnVal = 0
     numTrans = 0
     totalreturn = 0
+    equity = 0
     if owned:
         numShares = user['owned'][symbol]
+        equity = round(int(numShares) * float(data['price']),2)
         cost = db.child("users").child(uid).child("return").child(symbol).get().val();
         returnVal = round(float(cost) + equity,2)
+
+    #get historical ownership data for this stock for this user. This must be separate from the previous block becasue the user not owning
+    #the stock right now does not imply that the user has not owned the stock in the past
+    try:
         numTrans = user['stats']['transCount'][symbol]
         totalreturn = round(float(user['stats']['totalreturn'][symbol]) + (float(data['price'])*int(numShares)),2)
-    equity = round(int(numShares) * float(data['price']),2)
+    except KeyError:
+        pass
     context = {'symbol': symbol, 'stock': data, 'points': priceList, 'dayLabels': dayList, 'user': user, 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn}
     return render(request, 'stocktrading/stock.html', context)
 
@@ -295,7 +302,7 @@ def decreaseOwnedAndCost(symbol, count, price,user,uid):
     owned = db.child("users").child(uid).child("owned").child(symbol).get().val();
     curCost = db.child("users").child(uid).child("return").child(symbol).get().val()
     newCost = float(curCost) + (float(price) * int(count))
-    db.child("users").child(uid).child("return").child(symbol).update({symbol: newCost})
+    db.child("users").child(uid).child("return").update({symbol: newCost})
     newCount = int(owned) - int(count);
     db.child("users").child(uid).child("owned").update({symbol: newCount})
     #if user no longer owns any share, remove temporary fields entirely
@@ -314,8 +321,8 @@ def increaseTransactionCount(symbol, numShares,uid, user):
 def updateReturn(symbol, amount, uid):
     totalReturn = db.child("users").child(uid).child("stats").child("totalreturn").child(symbol).get().val()
     if totalReturn is None:
-        totalreturn = 0
-    newTotal = float(totalreturn) + amount
+        totalReturn = 0
+    newTotal = float(totalReturn) + amount
     db.child("users").child(uid).child("stats").child("totalreturn").update({symbol: newTotal })
 
 def landing(request):
