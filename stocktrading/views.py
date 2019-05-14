@@ -8,6 +8,7 @@ import json
 import requests
 from datetime import date, datetime, timedelta
 from django.views.decorators.csrf import csrf_exempt
+import collections
 
 
 config = {
@@ -22,24 +23,6 @@ firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 auth = firebase.auth()
 # Create your views here.
-
-stockSample = [
-    {
-        'symbol': 'MSFT',
-        'price': '100.0'
-    },
-    {
-        'symbol': 'GOOG',
-        'price': '1000.0'
-    },
-    {
-        'symbol': 'GE',
-        'price': '10.0'
-    }
-
-
-]
-
 
 def home(request):
     if 'uid' not in request.session:
@@ -177,13 +160,18 @@ def stocks(request, symbol):
     numShares = 0
     if owned:
         numShares = user['owned'][symbol]
-    equity = int(numShares) * float(data['price'])
+    equity = round(int(numShares) * float(data['price']),2)
     totalReturn = 0
     if owned:
         cost = db.child("users").child(uid).child("return").child(symbol).get().val();
-        totalReturn = float(cost) + equity
-        print(cost)
-    context = {'symbol': symbol, 'stock': data, 'points': priceList, 'dayLabels': dayList, 'user': user, 'owned': owned, 'numShares': numShares, 'equity': equity, 'cost': cost, 'totalReturn': totalReturn}
+        returnVal = round(float(cost) + equity,2)
+    numTrans = 0
+    totalreturn = 0
+    if owned:
+        numTrans = user['stats']['transCount'][symbol]
+        totalreturn = round(float(user['stats']['totalreturn'][symbol]) + (float(data['price'])*int(numShares)),2)
+
+    context = {'symbol': symbol, 'stock': data, 'points': priceList, 'dayLabels': dayList, 'user': user, 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn}
     return render(request, 'stocktrading/stock.html', context)
 
 @csrf_exempt
@@ -212,20 +200,25 @@ def buy(request,symbol):
     newBalance = round(float(user['balance']) - (float(price) * float(count)),2)
     db.child("users").child(uid).update({'balance':newBalance})
     #update user stock count if they already own that stock, otherwise create new entry
+    increaseOwnedAndCost(symbol,count, price,user,uid)
+    addBuyOrder(count, price, user, symbol, uid)
+    increaseTransactionCount(symbol, count, uid,user)
+    updateReturn(symbol, float(price)*int(count)*-1, uid)
+    messages.success(request, f'You bought {count} shares of {symbol}')
+    return redirect('stocktrading-stock', symbol = symbol)
+
+def increaseOwnedAndCost(symbol, count,price,user,uid):
     if ('owned' not in user) or (symbol not in user['owned']):
         db.child("users").child(uid).child("owned").update({symbol:count})
         db.child("users").child(uid).child("return").update({symbol: (float(price) * float(count)*-1)})
     else:
         curOwned = db.child("users").child(uid).child("owned").child(symbol).get().val();
-        print(curOwned)
         newCount = int(curOwned) + int(count);
         db.child("users").child(uid).child("owned").update({symbol: newCount})
-        curCost = db.child("users").child(uid).child("costs").child(symbol).get().val()
-        newCost =curCost - (float(price) * float(curCost))
-        db.child("users").child(uid).child("costs").update({symbol:newCost})
-    addBuyOrder(count, price, user, symbol, uid)
-    messages.success(request, f'You bought {count} shares of {symbol}')
-    return redirect('stocktrading-stock', symbol = symbol)
+        curCost = db.child("users").child(uid).child("return").child(symbol).get().val()
+        newCost =float(curCost) - (float(price) * int(count))
+        db.child("users").child(uid).child("return").update({symbol:newCost})
+
 
 def sell(request,symbol):
     #number of shares that user entered
@@ -238,20 +231,40 @@ def sell(request,symbol):
     newBalance = round(float(user['balance']) + (float(price) * float(count)),2)
     db.child("users").child(uid).update({'balance':newBalance})
     #update user stock count if they already own that stock, otherwise create new entry
+    decreaseOwnedAndCost(symbol, count,price,user,uid)
+    addSellOrder(count,price,user,symbol,uid)
+    increaseTransactionCount(symbol, count, uid,user)
+    updateReturn(symbol, float(price)*int(count),uid)
+    messages.success(request, f'You sold {count} shares of {symbol}')
+    return redirect('stocktrading-stock', symbol = symbol)
+
+def decreaseOwnedAndCost(symbol, count, price,user,uid):
     if ('owned' not in user) or (symbol not in user['owned']):
         db.child("users").child(uid).child("owned").update({symbol:count})
     else:
         owned = db.child("users").child(uid).child("owned").child(symbol).get().val();
-        curCost = db.child("users").child(uid).child("costs").child(symbol).get().val()
-        newCost = float(curCost) + (float(price) * float(count))
-        db.child("user").child(uid).child("costs").child(symbol).update({symbol: newCost})
+        curCost = db.child("users").child(uid).child("return").child(symbol).get().val()
+        newCost = float(curCost) + (float(price) * int(count))
+        db.child("users").child(uid).child("return").child(symbol).update({symbol: newCost})
         newCount = int(owned) - int(count);
         db.child("users").child(uid).child("owned").update({symbol: newCount})
         if newCount == 0:
             db.child("users").child(uid).child("owned").child(symbol).remove()
-    addSellOrder(count,price,user,symbol,uid)
-    messages.success(request, f'You sold {count} shares of {symbol}')
-    return redirect('stocktrading-stock', symbol = symbol)
+            db.child("users").child(uid).child("return").child(symbol).remove()
+
+def increaseTransactionCount(symbol, numShares,uid, user):
+    numTrans = db.child("users").child(uid).child("stats").child("transCount").child(symbol).get().val();
+    if numTrans is None:
+        numTrans = 0;
+    newNum = int(numTrans) + int(numShares)
+    db.child("users").child(uid).child("stats").child("transCount").update({symbol:newNum})
+
+def updateReturn(symbol, amount, uid):
+    totalReturn = db.child("users").child(uid).child("stats").child("totalreturn").child(symbol).get().val()
+    if totalReturn is None:
+        totalreturn = 0
+    newTotal = float(totalreturn) + amount
+    db.child("users").child(uid).child("stats").child("totalreturn").update({symbol: newTotal })
 
 def landing(request):
     return render(request, 'stocktrading/landing.html', {'user': None})
@@ -275,6 +288,8 @@ def transactions(request):
         return redirect('stocktrading-landing')
     uid = request.session['uid']
     user = db.child('users').child(uid).get().val();
+    temp = user['orders']['buy']
+    collections.OrderedDict(sorted(temp.items(), reverse=True))
     transactions = {};
     if 'orders' in user:
         buys = {}
@@ -287,7 +302,6 @@ def transactions(request):
             sells = {}
             for key,value in user['orders']['sell'].items():
                 sells[key] = value
-            print(sells)
             transactions["sells"] = sells;
 
 

@@ -96,11 +96,20 @@ var myChart = new Chart(ctx, {
                  <p class="mr-2">Your Equity</p>
               </div>
               <p>Total Equity: {{equity}}</p>
-              <p> Total Return: {{totalReturn}} </p>
+              <p>  Return: {{returnVal}} </p>
               <p class="article-content">Shares: {{numShares}}</p>
            </div>
 </article>
 {% endif %}
+<article class="media content-section">
+           <div class="media-body">
+              <div class="article-metadata">
+                 <p class="mr-2">Your History</p>
+              </div>
+              <p>Total Transactions: {{numTrans}}</p>
+              <p> Total Return: {{totalReturn}} </p>
+           </div>
+</article>
 <script>
 $('#like').click(function(){
     var val = $(this).val();
