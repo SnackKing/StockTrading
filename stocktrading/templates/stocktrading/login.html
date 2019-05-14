@@ -5,7 +5,7 @@
     	  {% csrf_token %}
       <h2 class="login-header mb-4">Please login</h2>
           {{ form.as_p }}
-      <button class="btn btn-lg btn-primary btn-block login-button bg-green" type="submit">Login</button>   
+      <button class="btn btn-lg btn-primary btn-block bg-green" type="submit">Login</button>   
     </form>
 
      <p class="login-header">Not Registered?  <a class="" href="{% url 'stocktrading-signup' %}">Create an Account</a> </p>  

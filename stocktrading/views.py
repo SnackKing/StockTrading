@@ -106,7 +106,7 @@ def login(request):
             return redirect('stocktrading-home')
     else:
         form = LoginForm()
-        return render(request, 'stocktrading/login.html', {'form': form})
+        return render(request, 'stocktrading/login.html', {'form': form, 'user':None})
 
 
 def signup(request):
@@ -135,7 +135,7 @@ def signup(request):
             return redirect('stocktrading-home')
     else:
         form = SignupForm()
-        return render(request, 'stocktrading/signup.html', {'form': form})
+        return render(request, 'stocktrading/signup.html', {'form': form, 'user':None})
 
 
 def stocks(request, symbol):
