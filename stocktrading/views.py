@@ -25,28 +25,38 @@ auth = firebase.auth()
 # Create your views here.
 
 def home(request):
+    #redirect user if they arent signed in
     if 'uid' not in request.session:
         return redirect('stocktrading-landing')
+
+    #get user
     uid = request.session['uid']
-    print('HOME UID')
-    print(uid)
     user = db.child('users').child(uid).get().val();
+
+    #search bar query, redirect to stock page with given symbol
     if(request.method == 'GET'):
         sym = request.GET.get('symbol', None)
         if sym != None:
             return redirect('stocktrading-stock', symbol=sym)
     stocks = ""
-    if (user != None) and 'added' in user:
+
+    #get all owned and tracked stocks
+    if 'added' in user or :
         stocks = ""
+        #get all tracked stocks
         for stock in user['added']:
             stocks += str(stock)
             stocks += ","
-        if 'owned' in user:
-            for stock in user['owned']:
-                stocks += str(stock)
-                stocks += ","
-        stocks = stocks[:-1]
-    print(stocks)
+    #get all owned stocks
+    if 'owned' in user:
+        for stock in user['owned']:
+            stocks += str(stock)
+            stocks += ","
+
+    #if at lease one stock was added, cut off extra trailing ','
+    stocks = stocks[:-1] if stocks != ""
+
+    #if the user had at least one stock, then make an api call for the requested stocks
     data = []
     if stocks != "":
         parameters = {
@@ -54,6 +64,8 @@ def home(request):
         response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
         result = json.loads(response.content.decode('utf-8'))
         data = result['data']
+
+    #get all stocks that are owned so that they can be displayed properly on the home page
     ownedStocks = getOwnedStocks(data, user)
     context = {
         'user': user,
@@ -88,8 +100,6 @@ def login(request):
             info = auth.get_account_info(user['idToken'])
             userid = info['users'][0]['localId']
             request.session['uid'] = userid
-            print("YOUR UID")
-            print(request.session['uid'])
             user = db.child("users").child(userid).get()
             name = user.val()['name']
             messages.success(request, f'{name} has been logged in')
@@ -129,48 +139,59 @@ def signup(request):
 
 
 def stocks(request, symbol):
+    #redirect user if they arent signed in
     uid = None
     if 'uid' not in request.session:
         return redirect('stocktrading-home')
     uid = request.session['uid']
+
+    #make API call to get data for stock in question
     parameters = {
         "api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX', "symbol": symbol}
     response = requests.get(
         "https://www.worldtradingdata.com/api/v1/stock", params=parameters)
     result = json.loads(response.content.decode('utf-8'))
     data = result['data'][0]
+
+    #create date object for today and 1 week ago for API call
     today = datetime.today().strftime('%Y-%m-%d')
     earlier = datetime.today() - timedelta(days=7)
     earlier = earlier.strftime('%Y-%m-%d')
+
+    #make api call for historical price data for stock
     historyParams = {"api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX',
                      'symbol': symbol, 'date_from': earlier, 'date_to': today, 'sort': 'oldest', 'output': 'json'}
     historyResponse = requests.get(
         "https://www.worldtradingdata.com/api/v1/history", params=historyParams)
     historyResult = json.loads(historyResponse.content.decode('utf-8'))
     filtered = historyResult['history']
+
+    #parse results into labels and points for chart.js
     priceList = []
     dayList = []
     for day, stats in filtered.items():
         priceList.append(stats['close'])
         dayList.append(day)
+
     user = db.child("users").child(uid).get().val();
+
+    #figure out if user actually owns this stock
     owned = False;
     if ('owned' in user) and (symbol in user['owned']) and (user['owned'][symbol] != 0):
         owned = True
+
+    #get additonal user data to display  
     numShares = 0
-    if owned:
-        numShares = user['owned'][symbol]
-    equity = round(int(numShares) * float(data['price']),2)
-    totalReturn = 0
-    if owned:
-        cost = db.child("users").child(uid).child("return").child(symbol).get().val();
-        returnVal = round(float(cost) + equity,2)
+    returnVal = 0
     numTrans = 0
     totalreturn = 0
     if owned:
+        numShares = user['owned'][symbol]
+        cost = db.child("users").child(uid).child("return").child(symbol).get().val();
+        returnVal = round(float(cost) + equity,2)
         numTrans = user['stats']['transCount'][symbol]
         totalreturn = round(float(user['stats']['totalreturn'][symbol]) + (float(data['price'])*int(numShares)),2)
-
+    equity = round(int(numShares) * float(data['price']),2)
     context = {'symbol': symbol, 'stock': data, 'points': priceList, 'dayLabels': dayList, 'user': user, 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn}
     return render(request, 'stocktrading/stock.html', context)
 
@@ -192,29 +213,47 @@ def add(request):
 def buy(request,symbol):
     #number of shares that user entered
     count = request.POST.get("count")
+
     #hidden form element
     price = request.POST.get("price")
+
+    #get user
     uid = request.session['uid']
     user = db.child("users").child(uid).get().val();
+
     #update user balance
     newBalance = round(float(user['balance']) - (float(price) * float(count)),2)
     db.child("users").child(uid).update({'balance':newBalance})
+
     #update user stock count if they already own that stock, otherwise create new entry
     increaseOwnedAndCost(symbol,count, price,user,uid)
+
+    #add buy order to user's history
     addBuyOrder(count, price, user, symbol, uid)
+
+    #increment total number of transactions made for this stock for this user
     increaseTransactionCount(symbol, count, uid,user)
+
+    #update total return for this stock
     updateReturn(symbol, float(price)*int(count)*-1, uid)
+
+    #create success message for stock being bought
     messages.success(request, f'You bought {count} shares of {symbol}')
     return redirect('stocktrading-stock', symbol = symbol)
 
 def increaseOwnedAndCost(symbol, count,price,user,uid):
+    #if stock isnt owned, then create field for stock in owned and return tables
     if ('owned' not in user) or (symbol not in user['owned']):
         db.child("users").child(uid).child("owned").update({symbol:count})
         db.child("users").child(uid).child("return").update({symbol: (float(price) * float(count)*-1)})
     else:
+        #if stock is owned, add to already existing values
+        #values for number of owned stocks
         curOwned = db.child("users").child(uid).child("owned").child(symbol).get().val();
         newCount = int(curOwned) + int(count);
         db.child("users").child(uid).child("owned").update({symbol: newCount})
+
+        #values for current return of stock
         curCost = db.child("users").child(uid).child("return").child(symbol).get().val()
         newCost =float(curCost) - (float(price) * int(count))
         db.child("users").child(uid).child("return").update({symbol:newCost})
@@ -223,36 +262,49 @@ def increaseOwnedAndCost(symbol, count,price,user,uid):
 def sell(request,symbol):
     #number of shares that user entered
     count = request.POST.get("count")
+
     #hidden form element
     price = request.POST.get("price")
+
+    #get user
     uid = request.session['uid']
     user = db.child("users").child(uid).get().val();
+
     #update user balance
     newBalance = round(float(user['balance']) + (float(price) * float(count)),2)
     db.child("users").child(uid).update({'balance':newBalance})
+
     #update user stock count if they already own that stock, otherwise create new entry
     decreaseOwnedAndCost(symbol, count,price,user,uid)
+
+    #add order to user's history
     addSellOrder(count,price,user,symbol,uid)
+
+    #increment total number of transactions made for the stock for this user
     increaseTransactionCount(symbol, count, uid,user)
+
+    #update total return for this stock for this user
     updateReturn(symbol, float(price)*int(count),uid)
+
+    #flash message for success
     messages.success(request, f'You sold {count} shares of {symbol}')
     return redirect('stocktrading-stock', symbol = symbol)
 
 def decreaseOwnedAndCost(symbol, count, price,user,uid):
-    if ('owned' not in user) or (symbol not in user['owned']):
-        db.child("users").child(uid).child("owned").update({symbol:count})
-    else:
-        owned = db.child("users").child(uid).child("owned").child(symbol).get().val();
-        curCost = db.child("users").child(uid).child("return").child(symbol).get().val()
-        newCost = float(curCost) + (float(price) * int(count))
-        db.child("users").child(uid).child("return").child(symbol).update({symbol: newCost})
-        newCount = int(owned) - int(count);
-        db.child("users").child(uid).child("owned").update({symbol: newCount})
-        if newCount == 0:
-            db.child("users").child(uid).child("owned").child(symbol).remove()
-            db.child("users").child(uid).child("return").child(symbol).remove()
+    #if stock is being sold, then we can assume that the user had to have owned it in the first place, which means that owned and return fields must exit
+    owned = db.child("users").child(uid).child("owned").child(symbol).get().val();
+    curCost = db.child("users").child(uid).child("return").child(symbol).get().val()
+    newCost = float(curCost) + (float(price) * int(count))
+    db.child("users").child(uid).child("return").child(symbol).update({symbol: newCost})
+    newCount = int(owned) - int(count);
+    db.child("users").child(uid).child("owned").update({symbol: newCount})
+    #if user no longer owns any share, remove temporary fields entirely
+    if newCount == 0:
+        db.child("users").child(uid).child("owned").child(symbol).remove()
+        db.child("users").child(uid).child("return").child(symbol).remove()
 
 def increaseTransactionCount(symbol, numShares,uid, user):
+    #add number of shares bought to current total amount of shares bought/sold of the stock
     numTrans = db.child("users").child(uid).child("stats").child("transCount").child(symbol).get().val();
     if numTrans is None:
         numTrans = 0;
@@ -269,11 +321,12 @@ def updateReturn(symbol, amount, uid):
 def landing(request):
     return render(request, 'stocktrading/landing.html', {'user': None})
 
-
+#creates a new buy order in the database with timestamp, symbol, number of shares, and price bought at
 def addBuyOrder(count, price, user, symbol,uid):
     timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
     db.child("users").child(uid).child('orders').child('buy').child(timestamp).set({'symbol':symbol, 'numShares': count, 'price': price})
 
+#creates a new sell order in the database with timestamp, symbol, number of shares, and price sold at
 def addSellOrder(count, price, user, symbol,uid):
     timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
     db.child("users").child(uid).child('orders').child('sell').child(timestamp).set({'symbol':symbol, 'numShares': count, 'price': price})
@@ -296,7 +349,6 @@ def transactions(request):
         if 'buy' in user['orders']:
             for key, value in user['orders']['buy'].items():
                 buys[key] = value
-            print(buys)
             transactions["buys"] = buys
         if 'sell' in user['orders']:
             sells = {}
