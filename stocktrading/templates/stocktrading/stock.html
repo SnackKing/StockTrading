@@ -89,7 +89,18 @@ var myChart = new Chart(ctx, {
 {% else %}
  <h6> You don't own any shares of {{symbol}} </h3>
 {% endif %}
-
+{% if owned %}
+<article class="media content-section">
+           <div class="media-body">
+              <div class="article-metadata">
+                 <p class="mr-2">Your Equity</p>
+              </div>
+              <p>Total Equity: {{equity}}</p>
+              <p> Total Return: {{totalReturn}} </p>
+              <p class="article-content">Shares: {{numShares}}</p>
+           </div>
+</article>
+{% endif %}
 <script>
 $('#like').click(function(){
     var val = $(this).val();
@@ -104,7 +115,6 @@ $('#like').click(function(){
                 },
                dataType: "json",
                success: function(response) {
-                    console.log(response.newVal)
                     document.getElementById('like').value =response.newVal;
   
 

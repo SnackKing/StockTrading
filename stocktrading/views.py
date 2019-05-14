@@ -177,9 +177,13 @@ def stocks(request, symbol):
     numShares = 0
     if owned:
         numShares = user['owned'][symbol]
-
-    print(user)
-    context = {'symbol': symbol, 'stock': data, 'points': priceList, 'dayLabels': dayList, 'user': user, 'owned': owned, 'numShares': numShares}
+    equity = int(numShares) * float(data['price'])
+    totalReturn = 0
+    if owned:
+        cost = db.child("users").child(uid).child("return").child(symbol).get().val();
+        totalReturn = float(cost) + equity
+        print(cost)
+    context = {'symbol': symbol, 'stock': data, 'points': priceList, 'dayLabels': dayList, 'user': user, 'owned': owned, 'numShares': numShares, 'equity': equity, 'cost': cost, 'totalReturn': totalReturn}
     return render(request, 'stocktrading/stock.html', context)
 
 @csrf_exempt
@@ -210,10 +214,15 @@ def buy(request,symbol):
     #update user stock count if they already own that stock, otherwise create new entry
     if ('owned' not in user) or (symbol not in user['owned']):
         db.child("users").child(uid).child("owned").update({symbol:count})
+        db.child("users").child(uid).child("return").update({symbol: (float(price) * float(count)*-1)})
     else:
-        owned = db.child("users").child(uid).child("owned").child(symbol).get().val();
-        newCount = int(owned) + int(count);
+        curOwned = db.child("users").child(uid).child("owned").child(symbol).get().val();
+        print(curOwned)
+        newCount = int(curOwned) + int(count);
         db.child("users").child(uid).child("owned").update({symbol: newCount})
+        curCost = db.child("users").child(uid).child("costs").child(symbol).get().val()
+        newCost =curCost - (float(price) * float(curCost))
+        db.child("users").child(uid).child("costs").update({symbol:newCost})
     addBuyOrder(count, price, user, symbol, uid)
     messages.success(request, f'You bought {count} shares of {symbol}')
     return redirect('stocktrading-stock', symbol = symbol)
@@ -233,8 +242,13 @@ def sell(request,symbol):
         db.child("users").child(uid).child("owned").update({symbol:count})
     else:
         owned = db.child("users").child(uid).child("owned").child(symbol).get().val();
+        curCost = db.child("users").child(uid).child("costs").child(symbol).get().val()
+        newCost = float(curCost) + (float(price) * float(count))
+        db.child("user").child(uid).child("costs").child(symbol).update({symbol: newCost})
         newCount = int(owned) - int(count);
         db.child("users").child(uid).child("owned").update({symbol: newCount})
+        if newCount == 0:
+            db.child("users").child(uid).child("owned").child(symbol).remove()
     addSellOrder(count,price,user,symbol,uid)
     messages.success(request, f'You sold {count} shares of {symbol}')
     return redirect('stocktrading-stock', symbol = symbol)
