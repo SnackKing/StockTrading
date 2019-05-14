@@ -1,0 +1,17 @@
+body {
+  background: url('/static/stocktrading/media/header.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+.whitetext{
+	color: white;
+}
+.rowButton{
+	display: inline-block;
+    vertical-align: top;
+}
+hr{
+	background-color: white;
+}

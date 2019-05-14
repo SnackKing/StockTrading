@@ -1,4 +1,22 @@
 {% extends "stocktrading/base.html" %}
+{% load staticfiles%}
 {% block content %}
-<p>This is the landing page</p>
+<link rel="stylesheet" type = "text/css" href = "{% static 'stocktrading/landing.css' %}">
+<div class="container">
+  <div class="border-0 shadow my-5 whitetext">
+    <div class="p-5">
+      <h1 class="font-weight-light whitetext display-4">Learn the Market Without the Risks</h1>
+      <hr />
+    </div>
+    <div class = "pl-5">
+      <p class="lead">TradeTester lets you buy and sell stocks in a simulated environment.</p>
+      <p class="lead">No ads, no limits, no risks.</p>
+      <p class="lead mb-0">Sign up or log in to get started.</p>
+      <a href="{% url 'stocktrading-signup' %}" class="btn btn-info bg-green mt-3 pl-2 pr-2 btn-md" role="button">Sign Up</a>
+      <a href="{% url 'stocktrading-login' %}" class="btn btn-info bg-green mt-3 ml-3 pl-2 pr-2 rowButton" role="button">Log In</a>
+
+
+    </div>
+  </div>
+</div>
 {% endblock content %}
