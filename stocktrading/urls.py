@@ -12,6 +12,7 @@ urlpatterns = [
     path('landing/', views.landing, name = "stocktrading-landing"),
     path('account/',views.account, name = "stocktrading-account"),
     path('transactions', views.transactions, name = "stocktrading-transactions"),
+    path ('signout/', views.signout, name = "stocktrading-signout"),
 
 
 ]

@@ -52,7 +52,7 @@ def home(request):
         sym = request.GET.get('symbol', None)
         if sym != None:
             return redirect('stocktrading-stock', symbol=sym)
-    stocks = "FB"
+    stocks = ""
     if (user != None) and 'added' in user:
         stocks = ""
         for stock in user['added']:
@@ -64,11 +64,13 @@ def home(request):
                 stocks += ","
         stocks = stocks[:-1]
     print(stocks)
-    parameters = {
-        "api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX', "symbol": stocks}
-    response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
-    result = json.loads(response.content.decode('utf-8'))
-    data = result['data']
+    data = []
+    if stocks != "":
+        parameters = {
+            "api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX', "symbol": stocks}
+        response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
+        result = json.loads(response.content.decode('utf-8'))
+        data = result['data']
     ownedStocks = getOwnedStocks(data, user)
     context = {
         'user': user,
@@ -81,8 +83,10 @@ def home(request):
 def getOwnedStocks(data, user):
     owned = {}
     for item in data:
-        if item['symbol'] in user['owned']:
+        if ('owned' in user) and (item['symbol'] in user['owned']):
             owned[item['symbol']] = item
+            temp = owned[item['symbol']]
+            temp['numShares'] = user['owned'][item['symbol']]
     return owned
 
 def about(request):
@@ -273,7 +277,11 @@ def transactions(request):
             transactions["sells"] = sells;
 
 
-    return render(request, 'stocktrading/transactions.html', {'transactions': transactions})
+    return render(request, 'stocktrading/transactions.html', {'transactions': transactions, 'user': user})
+
+def signout(request):
+    del request.session['uid']
+    return redirect("stocktrading-landing")
 
 
 

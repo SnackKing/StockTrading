@@ -11,6 +11,9 @@
 		  <input type = "submit" value = "Search" class = "btn btn-primary ml-1 bg-green" >
 		</form>
 	</div>
+		  {% if stocks|length == 0 %}
+		  	<h3 class = "">Stocks you are watching will show up here</h3>
+		  {% else %}
 	      {% for stock in stocks %}
 	      <article class="media content-section">
 	         <div class="media-body">
@@ -18,11 +21,12 @@
 	               <a class="mr-2" href="stocks/{{stock.symbol}}">{{ stock.symbol }}</a>
 	               <small class="text-muted">{{stock.name}}</small>
 	            </div>
-	            <h2><a class="article-title" href="#">{{ stock.price }}</a></h2>
+	            <h2><a class="article-title" href="stocks/{{stock.symbol}}">{{ stock.price }}</a></h2>
 	            <p class="article-content">{{stock.day_change}} ({{stock.change_pct}}%)</p>
 	         </div>
 	      </article>
 	      {% endfor %}
+	      {% endif %}
    </div>
    <div class="col-md-4">
       <div class="content-section">
@@ -33,7 +37,7 @@
 	         <p class='text-muted'>Stocks you own: 
 	         <ul class="list-group">
 	         	{% for key, value in owned.items %}
-	            <li class="list-group-item list-group-item-light">{{value.symbol}}: ${{value.price}} ({{value.day_change}})</li>
+	            <li class="list-group-item list-group-item-light">{{value.symbol}}: ${{value.price}} ({{value.day_change}}) <br/> {{value.numShares}} shares</li>
 	            {% endfor %}
 	         </ul>
 	         </p>
