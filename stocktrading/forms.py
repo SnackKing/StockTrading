@@ -1,7 +1,7 @@
 from django import forms
 
 class LoginForm(forms.Form):
-	email = forms.CharField(
+	email = forms.EmailField(
 		label = 'Email',
 		max_length = 1000,
 		required = True,
@@ -28,7 +28,7 @@ class SignupForm(forms.Form):
         	attrs = {'class': 'form-control mb-4', 'name': 'Name'}
     	)
 	)   
-	email = forms.CharField(
+	email = forms.EmailField(
 		label = 'Email',
 		max_length = 1000,
 		required = True,

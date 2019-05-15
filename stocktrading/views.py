@@ -98,7 +98,12 @@ def login(request):
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            user = auth.sign_in_with_email_and_password(email, password)
+            try:
+                user = auth.sign_in_with_email_and_password(email, password)
+            except:
+                messages.error(request, 'No user exists with that username/password')
+                return redirect('stocktrading-login')
+
             info = auth.get_account_info(user['idToken'])
             userid = info['users'][0]['localId']
             request.session['uid'] = userid
@@ -106,6 +111,10 @@ def login(request):
             name = user.val()['name']
             messages.success(request, f'{name} has been logged in')
             return redirect('stocktrading-home')
+        else:
+            messages.error(request, 'Invalid Entry')
+            return redirect('stocktrading-login')
+
     else:
         form = LoginForm()
         return render(request, 'stocktrading/login.html', {'form': form, 'user':None})
@@ -135,6 +144,11 @@ def signup(request):
             # return flash message and redirect
             messages.success(request, f'Account created for {username}')
             return redirect('stocktrading-home')
+        else:
+            messages.error(request, 'Invalid Entry')
+            return redirect('stocktrading-signup')
+
+
     else:
         form = SignupForm()
         return render(request, 'stocktrading/signup.html', {'form': form, 'user':None})
