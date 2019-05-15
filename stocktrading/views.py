@@ -400,8 +400,6 @@ def transactions(request):
         return redirect('stocktrading-landing')
     uid = request.session['uid']
     user = db.child('users').child(uid).get().val();
-    temp = user['orders']['buy']
-    collections.OrderedDict(sorted(temp.items(), reverse=True))
     transactions = {};
     if 'orders' in user:
         buys = {}
