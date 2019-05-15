@@ -153,6 +153,12 @@ def stocks(request, symbol):
     response = requests.get(
         "https://www.worldtradingdata.com/api/v1/stock", params=parameters)
     result = json.loads(response.content.decode('utf-8'))
+
+    #if no data attribute, then user entered an invalid symbol. Redirect to home with flash message
+    if 'data' not in result:
+        messages.error(request, f'{symbol} is not a valid symbol')
+        return redirect('stocktrading-home')
+
     data = result['data'][0]
 
     #create date object for today and 1 week ago for API call

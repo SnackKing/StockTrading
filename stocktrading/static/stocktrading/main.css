@@ -109,3 +109,7 @@ a.article-title:hover {
 .whitebutton{
   background-color: white; 
 }
+.alert-error{
+    border: 2px red solid;
+    background-color: #F67C6D;
+}
