@@ -2,9 +2,68 @@
 {% block content %}
 
 <div class = "container">
-	<h3> Your name: {{user.name}} </h3>
-	<h3> Your email: {{user.email}}</h3>
-	<h3> Your balance: {{user.balance}} </h3>
+	<h2>Your Account</h2>
+	<article class="media content-section">
+           <div class="media-body">
+              <div class="article-metadata">
+                 <p class="mr-2">Personal Info</p>
+              </div>
+              <div class = "row mt-4">
+	              <p class = "col-sm">Name: {{user.name}}</p>
+	              <p class = "col-sm">Email: {{user.email}} </p>
+	              <p class = "col-sm">Balance: {{user.balance}}</p>
+          	  </div>
+           </div>
+	</article>
+	<article class="media content-section">
+           <div class="media-body">
+              <div class="article-metadata">
+                 <p class="mr-2">Your Portfolio</p>
+              </div>
+              <div class="row">
+				{% for key,value in user.owned.items %}
+				    <div class="col-sm">{{key}}: {{value}} shares</div>
+				    {% if forloop.counter|divisibleby:3 %}
+				</div>
+				<div class="row">
+				    {% endif %}
+				{% endfor %}
+				</div>
+           </div>
+	</article>
+	<article class="media content-section">
+           <div class="media-body">
+              <div class="article-metadata">
+                 <p class="mr-2">Your Favorite Stocks</p>
+              </div>
+              <div class = "mt-4">
+	            {% for key,value in favs.items %}
+					<p> {{key}}: {{value}} total transactions</p>
+				{%endfor%}
+          	  </div>
+           </div>
+	</article>
+	<article class="media content-section">
+           <div class="media-body">
+              <div class="article-metadata">
+                 <p class="mr-2">Total Assets</p>
+              </div>
+              <h2>Total: {{ total }}</h2>
+              <h6> Balance: {{ user.balance }}</h8>
+              	<hr />
+                <div class="row">
+				{% for key,value in equities.items %}
+				    <div class="col-sm">{{key}}: {{value}}</div>
+				    {% if forloop.counter|divisibleby:3 %}
+				</div>
+				<div class="row">
+				    {% endif %}
+				{% endfor %}
+				</div>
+           </div>
+	</article>
+	
+	
 </div>
 
 {% endblock content %}

@@ -9,6 +9,8 @@ import requests
 from datetime import date, datetime, timedelta
 from django.views.decorators.csrf import csrf_exempt
 import collections
+from collections import OrderedDict
+
 
 
 config = {
@@ -341,7 +343,37 @@ def addSellOrder(count, price, user, symbol,uid):
 def account(request):
     uid = request.session['uid']
     user = db.child('users').child(uid).get().val();
-    return render(request, 'stocktrading/account.html', {'user': user})
+    topStocks = {}
+    if "stats" in user:
+        trans = user["stats"]["transCount"]
+       # topStocks = OrderedDict(sorted(trans.items(), key = lambda t: t[1], reverse = True))
+        topStocks = dict(collections.Counter(trans).most_common(5))
+    equities = getOwnedEquity(user) if "owned" in user else {}
+    totalValue = round(sumAllAssets(user,equities),2)
+    return render(request, 'stocktrading/account.html', {'user': user, 'favs': topStocks, 'equities': equities, 'total': totalValue})
+
+def getOwnedEquity(user):
+    stocks = ""
+    for stock in user['owned']:
+        stocks += str(stock)
+        stocks += ","
+    #if at lease one stock was added, cut off extra trailing ','
+    stocks = stocks[:-1] if stocks != "" else stocks
+    parameters = {
+        "token": 'sk_0a0d416a40b6401a87b46811783be7be', "symbols": stocks}
+    response = requests.get(
+        "https://cloud.iexapis.com/stable/tops", params=parameters)
+    result = json.loads(response.content.decode('utf-8'))
+    equitys = {}
+    for item in result:
+        equitys[item['symbol']] = round(float(item['askPrice']) * int(user['owned'][item['symbol']]),2)
+    return equitys
+
+def sumAllAssets(user, equitys):
+    stockVal = 0
+    for stock in equitys:
+        stockVal += equitys[stock]
+    return user['balance'] + stockVal
 
 def transactions(request):
     if 'uid' not in request.session:
