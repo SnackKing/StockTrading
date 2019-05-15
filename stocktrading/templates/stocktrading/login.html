@@ -1,9 +1,9 @@
 {% extends "stocktrading/base.html" %}
 {% block content %}
-<div class="w-50 login-form" >
+<div class="col-sm-6 login-form" >
     <form class="" method="POST">       
     	  {% csrf_token %}
-      <h2 class="login-header mb-4">Please login</h2>
+      <h2 class="login-header mb-4 centeredText">Please login</h2>
           {{ form.as_p }}
       <button class="btn btn-lg btn-primary btn-block bg-green" type="submit">Login</button>   
     </form>
