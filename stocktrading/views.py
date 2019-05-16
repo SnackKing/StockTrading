@@ -406,12 +406,14 @@ def transactions(request):
         if 'buy' in user['orders']:
             for key, value in user['orders']['buy'].items():
                 buys[key] = value
-            transactions["buys"] = buys
+            newBuys = OrderedDict(sorted(buys.items(), reverse = True))
+            transactions["buys"] = newBuys
         if 'sell' in user['orders']:
             sells = {}
             for key,value in user['orders']['sell'].items():
                 sells[key] = value
-            transactions["sells"] = sells;
+            newSells = OrderedDict(sorted(sells.items(), reverse = True))
+            transactions["sells"] = newSells;
 
 
     return render(request, 'stocktrading/transactions.html', {'transactions': transactions, 'user': user})
