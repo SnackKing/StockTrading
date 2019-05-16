@@ -113,6 +113,9 @@ a.article-title:hover {
     border: 2px red solid;
     background-color: #F67C6D;
 }
+.custom-control-label::before {
+    background-color: #85bb65;
+}
 .flexbox { display: flex; }
 .flexbox .stretch { flex: 1; }
 .flexbox .normal { flex: 0; margin: 0 0 0 1rem; }

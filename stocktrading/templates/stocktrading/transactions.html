@@ -3,13 +3,13 @@
 
 <div class = "container">
 	<div id="myButtons" class="btn-group" data-toggle="buttons">
-  <label class="btn btn-primary active">
-    <input type="radio" name="options" id="buy" autocomplete="off" checked> Bought
-  </label>
-  <label class="btn btn-primary">
-    <input type="radio" name="options" id="sell" autocomplete="off"> Sold
-  </label>
-</div>
+	  <label class="btn btn-primary active bg-green" style="background-color: #85bb65;">
+	    <input type="radio" name="options" id="buy" autocomplete="off" checked> Bought
+	  </label>
+	  <label class="btn btn-primary" style="background-color:#85bb65; ">
+	    <input type="radio" name="options" id="sell" autocomplete="off"> Sold
+	  </label>
+	</div>
 	<div id = "bought">
 		{% if transactions.buys %}
 
