@@ -379,14 +379,16 @@ def getOwnedEquity(user):
         stocks += ","
     #if at lease one stock was added, cut off extra trailing ','
     stocks = stocks[:-1] if stocks != "" else stocks
+    print(stocks)
     parameters = {
         "token": 'sk_0a0d416a40b6401a87b46811783be7be', "symbols": stocks}
     response = requests.get(
         "https://cloud.iexapis.com/stable/tops", params=parameters)
     result = json.loads(response.content.decode('utf-8'))
     equitys = {}
+    print(result)
     for item in result:
-        equitys[item['symbol']] = round(float(item['askPrice']) * int(user['owned'][item['symbol']]),2)
+        equitys[item['symbol']] = round(float(item['lastSalePrice']) * int(user['owned'][item['symbol']]),2)
     return equitys
 
 def sumAllAssets(user, equitys):

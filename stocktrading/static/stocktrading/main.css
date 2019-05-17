@@ -116,6 +116,10 @@ a.article-title:hover {
 .custom-control-label::before {
     background-color: #85bb65;
 }
+.singleline{
+  white-space: nowrap;
+  overflow: hidden;
+}
 .flexbox { display: flex; }
 .flexbox .stretch { flex: 1; }
 .flexbox .normal { flex: 0; margin: 0 0 0 1rem; }
