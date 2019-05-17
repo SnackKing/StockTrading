@@ -87,7 +87,14 @@ def getOwnedStocks(data, user):
     return owned
 
 def about(request):
+    #redirect if not signed in
+    if "uid" not in request.session:
+        return redirect('stocktrading-login')
+    #get user
+    uid = request.session['uid']
+    user = db.child('users').child(uid).get().val();
     context = {
+    'user':user
     }
     return render(request, 'stocktrading/about.html', context)
 
