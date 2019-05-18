@@ -13,15 +13,15 @@
 		  {% if stocks|length == 0 %}
 		  	<h3 class = "">Stocks you are watching will show up here</h3>
 		  {% else %}
-	      {% for stock in stocks %}
+	      {% for key,value in watched.items %}
 	      <article class="media content-section">
 	         <div class="media-body">
 	            <div class="article-metadata">
-	               <a class="mr-2" href="stocks/{{stock.symbol}}">{{ stock.symbol }}</a>
-	               <small class="text-muted">{{stock.name}}</small>
+	               <a class="mr-2" href="stocks/{{value.symbol}}">{{ value.symbol }}</a>
+	               <small class="text-muted">{{value.name}}</small>
 	            </div>
-	            <h2><a class="article-title" href="stocks/{{stock.symbol}}">{{ stock.price }}</a></h2>
-	            <p class="article-content">{{stock.day_change}} ({{stock.change_pct}}%)</p>
+	            <h2><a class="article-title" href="stocks/{{value.symbol}}">{{ value.price }}</a></h2>
+	            <p class="article-content">{{value.day_change}} ({{value.change_pct}}%)</p>
 	         </div>
 	      </article>
 	      {% endfor %}

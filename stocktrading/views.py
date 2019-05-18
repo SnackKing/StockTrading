@@ -10,6 +10,7 @@ from datetime import date, datetime, timedelta
 from django.views.decorators.csrf import csrf_exempt
 import collections
 from collections import OrderedDict
+import random
 
 
 
@@ -26,6 +27,14 @@ db = firebase.database()
 auth = firebase.auth()
 # Create your views here.
 
+def splitStocks(stocks):
+    result = []
+    stockList = stocks.split(",")
+    for x in range(0, len(stockList),5):
+        result.append(",".join(stockList[x:x+5]))
+    return result
+
+
 def home(request):
     #redirect user if they arent signed in
     if 'uid' not in request.session:
@@ -41,38 +50,48 @@ def home(request):
         if sym != None:
             return redirect('stocktrading-stock', symbol=sym)
     stocks = ""
-
+    seenStocks = set()
     #get all owned and tracked stocks
     if 'added' in user:
         stocks = ""
         #get all tracked stocks
         for stock in user['added']:
-            stocks += str(stock)
-            stocks += ","
+            if stock not in seenStocks:
+                seenStocks.add(stock)
+                stocks += str(stock)
+                stocks += ","
     #get all owned stocks
     if 'owned' in user:
         for stock in user['owned']:
-            stocks += str(stock)
-            stocks += ","
+            if stock not in seenStocks:
+                seenStocks.add(stock)
+                stocks += str(stock)
+                stocks += ","
 
     #if at lease one stock was added, cut off extra trailing ','
     stocks = stocks[:-1] if stocks != "" else stocks
-
+    stockList = splitStocks(stocks)
+    print("HERE IT IS")
+    print(stockList)
     #if the user had at least one stock, then make an api call for the requested stocks
     data = []
     if stocks != "":
-        parameters = {
-            "api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX', "symbol": stocks}
-        response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
-        result = json.loads(response.content.decode('utf-8'))
-        data = result['data']
-
+        for group in stockList:
+            print(group)
+            parameters = {
+                "api_token": randomKey(), "symbol": group}
+            response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
+            result = json.loads(response.content.decode('utf-8'))
+            data = data + result['data']
+            print(data)
     #get all stocks that are owned so that they can be displayed properly on the home page
     ownedStocks = getOwnedStocks(data, user)
+    watchedStocks = getWatchedStocks(data,user)
     context = {
         'user': user,
         'uid': uid,
         'stocks': data,
+        'watched': watchedStocks,
         'owned': ownedStocks
     }
     return render(request, 'stocktrading/home.html', context)
@@ -85,6 +104,13 @@ def getOwnedStocks(data, user):
             temp = owned[item['symbol']]
             temp['numShares'] = user['owned'][item['symbol']]
     return owned
+
+def getWatchedStocks(data, user):
+    watched = {}
+    for item in data:
+        if ('added' in user) and (item['symbol'] in user['added']):
+            watched[item['symbol']] = item
+    return watched
 
 def about(request):
     #redirect if not signed in
@@ -170,7 +196,7 @@ def stocks(request, symbol):
 
     #make API call to get data for stock in question
     parameters = {
-        "api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX', "symbol": symbol}
+        "api_token": randomKey(), "symbol": symbol}
     response = requests.get(
         "https://www.worldtradingdata.com/api/v1/stock", params=parameters)
     result = json.loads(response.content.decode('utf-8'))
@@ -188,7 +214,7 @@ def stocks(request, symbol):
     earlier = earlier.strftime('%Y-%m-%d')
 
     #make api call for historical price data for stock
-    historyParams = {"api_token": 'mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX',
+    historyParams = {"api_token": randomKey(),
                      'symbol': symbol, 'date_from': earlier, 'date_to': today, 'sort': 'oldest', 'output': 'json'}
     historyResponse = requests.get(
         "https://www.worldtradingdata.com/api/v1/history", params=historyParams)
@@ -431,5 +457,11 @@ def signout(request):
     del request.session['uid']
     return redirect("stocktrading-landing")
 
-
+#Using 2 API keys because why not
+def randomKey():
+    rdmBool = bool(random.getrandbits(1))
+    if rdmBool:
+        return "o3yCTA0mVXrkep8zrRwmL2vt6kPJ8KPgZdbF6D8whZNDRkGqAteM3TewEAsK"
+    else:
+        return "mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX"
 
