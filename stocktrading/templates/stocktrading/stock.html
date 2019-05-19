@@ -20,7 +20,7 @@
 	<h6>Today's Change: {{stock.day_change}}</h6>
 	<h6>Change in %: {{stock.change_pct}}</h6>
 <div class = "table-responsive">
-<canvas id="myChart" style="min-height: 250px"></canvas>
+<canvas id="myChart" style="min-height: 500px"></canvas>
 </div>
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');
@@ -38,6 +38,7 @@ var myChart = new Chart(ctx, {
     },
     options: {
       responsive:true,
+      maintainAspectRatio:false,
         scales: {
             yAxes: [{
                 ticks: {
