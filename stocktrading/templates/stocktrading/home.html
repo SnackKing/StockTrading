@@ -20,8 +20,13 @@
 	               <a class="mr-2" href="stocks/{{value.symbol}}">{{ value.symbol }}</a>
 	               <small class="text-muted">{{value.name}}</small>
 	            </div>
-	            <h2><a class="article-title" href="stocks/{{value.symbol}}">{{ value.price }}</a></h2>
-	            <p class="article-content">{{value.day_change}} ({{value.change_pct}}%)</p>
+	            <div class="mt-1 mb-2"> 
+		            <h2 class="inline"><a class="article-title" href="stocks/{{value.symbol}}">{{ value.price }}</a></h2>
+		            <h5 class="inline">USD</h5>
+	        	</div>
+	            <div class = "{% if value.day_change|slice:'1' == '-' %}downtrend{% else %}uptrend{% endif %}">
+	            	<p class="article-content">{{value.day_change}} ({{value.change_pct}}%)</p>
+	        	</div>
 	         </div>
 	      </article>
 	      {% endfor %}
@@ -36,7 +41,7 @@
 	         <p class='text-muted'>Stocks you own: 
 	         <ul class="list-group">
 	         	{% for key, value in owned.items %}
-	            <li class="list-group-item list-group-item-light">{{value.symbol}}: ${{value.price}} ({{value.day_change}}) <br/> {{value.numShares}} shares</li>
+	            <li class="list-group-item list-group-item-light">{{value.symbol}}: ${{value.price}} <span class = "{% if value.day_change|slice:'1' == '-' %}downtrend{% else %}uptrend{% endif %}">({{value.day_change}})</span> <br/> {{value.numShares}} shares</li>
 	            {% endfor %}
 	         </ul>
 	         </p>

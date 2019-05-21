@@ -119,6 +119,23 @@ a.article-title:hover {
 #singleline{
   white-space: nowrap;
 }
+.uptrend{
+ color:green;
+}
+.downtrend{
+  color: red;
+}
+.floatLeft{
+  float: left;
+  text-align:left;
+}
+.floatRight{
+  float: right;
+  text-align:right;
+}
+.inline{
+  display: inline;
+}
 .flexbox { display: flex; }
 .flexbox .stretch { flex: 1; }
 .flexbox .normal { flex: 0; margin: 0 0 0 1rem; }
