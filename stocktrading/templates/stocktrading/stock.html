@@ -102,6 +102,29 @@ var myChart = new Chart(ctx, {
 {% else %}
  <h6> You don't own any shares of {{symbol}} </h3>
 {% endif %}
+<article class="media content-section">
+           <div class="media-body">
+              <div class="article-metadata">
+                 <p class="mr-2">More Info</p>
+              </div>
+               <div class = "row">
+                 <p class="article-content col-sm">Today's High: {{stock.day_high}} {{stock.currency}}</p>
+                 <p class="article-content col-sm">Today's Low: {{stock.day_low}} {{stock.currency}}</p>
+              </div>
+              <div class = "row">
+                 <p class="article-content col-sm">52 Week High: {{stock.52_week_high}} {{stock.currency}}</p>
+                 <p class="article-content col-sm">52 Week Low: {{stock.52_week_low}} {{stock.currency}}</p>
+              </div>
+               <div class = "row">
+                 <p class="article-content col-sm">Market Cap: {{stock.market_cap}}</p>
+                 <p class="article-content col-sm">Shares: {{stock.shares}}</p>
+              </div>
+               <div class = "row">
+                 <p class="article-content col-sm">Volume: {{stock.volume}}</p>
+                 <p class="article-content col-sm">Volume Average: {{stock.volume_avg}}</p>
+              </div>
+           </div>
+</article>
 {% if owned %}
 <article class="media content-section">
            <div class="media-body">
