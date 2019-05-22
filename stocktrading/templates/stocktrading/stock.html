@@ -3,12 +3,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
-<div class = "container">
-    <div class = "row" id = "header">
+<div class = "container mt-2">
+    <div class = "row mt-2" id = "header">
       <div class = "col-md-10 col-sm-12">
     	 <h3>{{stock.name}} ({{stock.symbol}})</h3>
       </div>
-      <div class="col-md-2 col-sm-12">
+      <div class="col-md-2 col-sm-12 mt-2 mb-2">
         {% if symbol in user.added %}
             <input type="button" id="like" name="Like" value="Stop Watching" class = "btn btn-primary bg-green pull-right" />
         {% else %}
@@ -108,20 +108,20 @@ var myChart = new Chart(ctx, {
                  <p class="mr-2">More Info</p>
               </div>
                <div class = "row">
-                 <p class="article-content col-sm">Today's High: {{stock.day_high}} {{stock.currency}}</p>
-                 <p class="article-content col-sm">Today's Low: {{stock.day_low}} {{stock.currency}}</p>
+                 <p class="article-content col-sm"><span class = "font-weight-bold">Today's High: </span> {{stock.day_high}} {{stock.currency}}</p>
+                 <p class="article-content col-sm"><span class = "font-weight-bold">Today's Low:</span>  {{stock.day_low}} {{stock.currency}}</p>
               </div>
               <div class = "row">
-                 <p class="article-content col-sm">52 Week High: {{stock.52_week_high}} {{stock.currency}}</p>
-                 <p class="article-content col-sm">52 Week Low: {{stock.52_week_low}} {{stock.currency}}</p>
+                 <p class="article-content col-sm"><span class = "font-weight-bold">52 Week High:</span>  {{stock.52_week_high}} {{stock.currency}}</p>
+                 <p class="article-content col-sm"><span class = "font-weight-bold">52 Week Low:</span>  {{stock.52_week_low}} {{stock.currency}}</p>
               </div>
                <div class = "row">
-                 <p class="article-content col-sm">Market Cap: {{stock.market_cap}}</p>
-                 <p class="article-content col-sm">Shares: {{stock.shares}}</p>
+                 <p class="article-content col-sm"><span class = "font-weight-bold">Market Cap:</span>  {{stock.market_cap}}</p>
+                 <p class="article-content col-sm"><span class = "font-weight-bold">Shares:</span>  {{stock.shares}}</p>
               </div>
                <div class = "row">
-                 <p class="article-content col-sm">Volume: {{stock.volume}}</p>
-                 <p class="article-content col-sm">Volume Average: {{stock.volume_avg}}</p>
+                 <p class="article-content col-sm"><span class = "font-weight-bold">Volume:</span>  {{stock.volume}}</p>
+                 <p class="article-content col-sm"><span class = "font-weight-bold">Volume Average:</span>  {{stock.volume_avg}}</p>
               </div>
            </div>
 </article>
@@ -131,9 +131,9 @@ var myChart = new Chart(ctx, {
               <div class="article-metadata">
                  <p class="mr-2">Your Equity</p>
               </div>
-              <p>Total Equity: {{equity}}</p>
-              <p>  Return: {{returnVal}} </p>
-              <p class="article-content">Shares: {{numShares}}</p>
+              <p><span class = "font-weight-bold">Total Equity:</span>  {{equity}}</p>
+              <p><span class = "font-weight-bold"> Return: </span> {{returnVal}} </p>
+              <p class="article-content"><span class = "font-weight-bold">Shares:</span> {{numShares}}</p>
            </div>
 </article>
 {% endif %}
@@ -142,8 +142,8 @@ var myChart = new Chart(ctx, {
               <div class="article-metadata">
                  <p class="mr-2">Your History</p>
               </div>
-              <p>Total Transactions: {{numTrans}}</p>
-              <p> Total Return: {{totalReturn}} </p>
+              <p><span class = "font-weight-bold">Total Transactions:</span>  {{numTrans}}</p>
+              <p><span class = "font-weight-bold">Total Return: </span> {{totalReturn}} </p>
            </div>
 </article>
 <script>
