@@ -151,6 +151,28 @@ a.article-title:hover {
 .article-Neutral{
   color: gray;
 }
+.articleDesktop{
+  display: flex;
+  align-items: flex-start;
+}
+.imageLeft{
+  float: left;
+  width: 30%;
+  height: auto;
+}
+.newsArticle{
+  align-items: flex-start;
+  margin-left: 10px;
+}
+@media all and (max-width:500px){
+    .imageLeft, .newsArticle{
+        float:none;
+        width: 100%;
+    }
+    .articleDesktop{
+      display: block;
+    }
+}
 .flexbox { display: flex; }
 .flexbox .stretch { flex: 1; }
 .flexbox .normal { flex: 0; margin: 0 0 0 1rem; }

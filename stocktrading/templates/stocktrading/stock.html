@@ -149,9 +149,9 @@ var myChart = new Chart(ctx, {
 <h3>News about {{stock.symbol}}</h3>
 <hr>
 {% for article in newsData %}
-<article class="media content-section">
-          <img style="float: left" width="30%" height="auto" src = "{{article.image_url}}">
-           <div class="media-body ml-4">
+<article class="content-section articleDesktop">
+          <img class = "imageLeft" src = "{{article.image_url}}">
+           <div class="media-body newsArticle">
               <div class="article-metadata">
                  <p class="mr-2"><a href = "{{article.news_url}}">{{article.title}}</a></p>
               </div>
