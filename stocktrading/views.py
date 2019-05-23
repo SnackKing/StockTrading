@@ -71,19 +71,15 @@ def home(request):
     #if at lease one stock was added, cut off extra trailing ','
     stocks = stocks[:-1] if stocks != "" else stocks
     stockList = splitStocks(stocks)
-    print("HERE IT IS")
-    print(stockList)
     #if the user had at least one stock, then make an api call for the requested stocks
     data = []
     if stocks != "":
         for group in stockList:
-            print(group)
             parameters = {
                 "api_token": randomKey(), "symbol": group}
             response = requests.get("https://www.worldtradingdata.com/api/v1/stock", params=parameters)
             result = json.loads(response.content.decode('utf-8'))
             data = data + result['data']
-            print(data)
     #get all stocks that are owned so that they can be displayed properly on the home page
     ownedStocks = getOwnedStocks(data, user)
     watchedStocks = getWatchedStocks(data,user)
@@ -92,7 +88,8 @@ def home(request):
         'uid': uid,
         'stocks': data,
         'watched': watchedStocks,
-        'owned': ownedStocks
+        'owned': ownedStocks,
+
     }
     return render(request, 'stocktrading/home.html', context)
 
@@ -254,8 +251,18 @@ def stocks(request, symbol):
         totalreturn = round(float(user['stats']['totalreturn'][symbol]) + (float(data['price'])*int(numShares)),2)
     except KeyError:
         pass
-    context = {'symbol': symbol, 'stock': data, 'points': priceList, 'dayLabels': dayList, 'user': user, 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn}
+    newsData = getNewsData(symbol)
+    context = {'symbol': symbol, 'stock': data, 'points': priceList, 'dayLabels': dayList, 'user': user, 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn, 'newsData':newsData}
     return render(request, 'stocktrading/stock.html', context)
+
+def getNewsData(symbol):
+    parameters = {"token": "3rnk49qveukvizaifh0bykco6o3ogpfiiamqimvy", "tickers": symbol,'type':'article', 'items':"5", 'fallback':"true"}
+    response = requests.get("https://stocknewsapi.com/api/v1", params=parameters)
+    newsResult = json.loads(response.content.decode('utf-8'))
+    newsData = newsResult['data'];
+    print(type(newsData))
+    return newsData
+
 
 @csrf_exempt
 def add(request):

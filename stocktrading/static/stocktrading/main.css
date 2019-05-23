@@ -136,6 +136,21 @@ a.article-title:hover {
 .inline{
   display: inline;
 }
+.articleTag{
+  background-color: #85bb65;
+  border-radius: 5px;
+  color: white;
+  padding: 5px;
+}
+.article-Positive{
+  color: green;
+}
+.article-Negative{
+  color: red;
+}
+.article-Neutral{
+  color: gray;
+}
 .flexbox { display: flex; }
 .flexbox .stretch { flex: 1; }
 .flexbox .normal { flex: 0; margin: 0 0 0 1rem; }
