@@ -20,5 +20,7 @@ from teachers import views as teacher_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('stocktrading.urls')),
-    path('teachers/login', teacher_views.login, name ='login'),
+    path('teachers/login', teacher_views.login, name ='teachers-login'),
+    path('teachers/signup', teacher_views.signup, name='teachers-signup'),
+    path('teachers/dashboard', teacher_views.dashboard, name = 'teachers-dashboard'),
 ]

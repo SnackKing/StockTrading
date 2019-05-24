@@ -180,3 +180,22 @@ a.article-title:hover {
 .flexbox .normal { flex: 0; margin: 0 0 0 1rem; }
 .flexbox div input { padding: .5em 1em; width: 100%; }
 .flexbox div button { padding: .5em 1em; white-space: nowrap; }
+
+.login-form{
+  margin: 0 auto;
+  background: #FFFFFF;
+  padding:3em;
+}
+.login-header{
+  margin-top: 1em;
+}
+.login-field{
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.login-button{
+  background-color: #5f788a;
+}
+.centeredText{
+  text-align: center;
+}

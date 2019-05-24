@@ -2,7 +2,7 @@ from django import forms
 
 class LoginForm(forms.Form):
     email = forms.EmailField(
-        label = 'Email',
+        label = 'Teacher Email',
         max_length = 1000,
         required = True,
         widget = forms.TextInput(
@@ -29,7 +29,7 @@ class SignupForm(forms.Form):
         )
     )   
     email = forms.EmailField(
-        label = 'Email',
+        label = 'Teacher Email',
         max_length = 1000,
         required = True,
         widget = forms.TextInput(
@@ -43,5 +43,15 @@ class SignupForm(forms.Form):
         widget = forms.PasswordInput(
             attrs = {'class': 'form-control mb-4', 'name': 'Password'}
         )
+    )
+    code = forms.CharField(
+        label = 'Join Code',
+        max_length = 10,
+        required = True,
+        widget = forms.TextInput(
+            attrs = {'class': 'form-control mb-4', 'name': 'JoinCode'}
+        )
+
+
     )   
     

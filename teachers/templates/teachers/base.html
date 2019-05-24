@@ -8,7 +8,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" type = "text/css" href = "{% static 'stocktrading/main.css' %}">
+    <link rel="stylesheet" type = "text/css" href = "{% static 'teachers/main.css' %}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -26,7 +26,7 @@
 	<header class="site-header">
 	  <nav class="navbar navbar-expand-md navbar-dark bg-green fixed-top">
 	    <div class="container">
-	      <a class="navbar-brand mr-4" href="{% url 'stocktrading-home' %}">
+	      <a class="navbar-brand mr-4" href="{% url 'teachers-dashboard' %}">
 	      	<img src="{% static 'stocktrading/media/tradetester.png' %}" style="height: 45px;" alt="">
 	      </a>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,14 +34,14 @@
 	      </button>
 	      <div class="collapse navbar-collapse" id="navbarToggle">
 	        <div class="navbar-nav mr-auto">
-	          <a class="nav-item nav-link" href="{% url 'stocktrading-home' %}">Home</a>
+	          <a class="nav-item nav-link" href="{% url 'teachers-dashboard' %}">Teacher Dashboard</a>
 	          <a class="nav-item nav-link" href="{% url 'stocktrading-about' %}">About</a>
 	        </div>
 	        <!-- Navbar Right Side -->
 	        <div class="navbar-nav">
 	          {% if user == None %}
-		          <a class="nav-item nav-link" href="{% url 'stocktrading-login' %}">Login</a>
-		          <a class="nav-item nav-link" href="{% url 'stocktrading-signup' %}">Register</a>
+		          <a class="nav-item nav-link" href="{% url 'teachers-login' %}">Login</a>
+		          <a class="nav-item nav-link" href="{% url 'teachers-signup' %}">Register</a>
 	          {% else %}
 				<div class="dropdown">
 				  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
