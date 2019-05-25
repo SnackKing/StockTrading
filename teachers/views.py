@@ -6,6 +6,8 @@ import os
 from django.contrib import messages
 import json
 import requests
+import string
+import random
 
 config = {
 	"apiKey": "AIzaSyAzXh-si71dEDldZkLmbY7l-_NZ8VJTfs4",
@@ -38,7 +40,7 @@ def login(request):
 			if userid not in teachers:
 				messages.error(request, 'That account is not a teacher account')
 				return redirect('teachers-login')
-			request.session['uid'] = userid
+			request.session['tid'] = userid
 			name = teachers[userid]['name']
 			messages.success(request, f'{name} has been logged in')
 			return redirect('teachers-dashboard')
@@ -65,7 +67,7 @@ def signup(request):
 			info = auth.get_account_info(user['idToken'])
 			userInfo = info['users']
 			userId = userInfo[0]['localId']
-			request.session['uid'] = userId
+			request.session['tid'] = userId
 			db.child("teachers").child(userId).set(newUser)
 
 			# return flash message and redirect
@@ -79,20 +81,37 @@ def signup(request):
 		return render(request, 'teachers/signup.html', {'form': form, 'user':None})
 
 def dashboard(request):
-	if 'uid' not in request.session:
+	if 'tid' not in request.session:
 		return redirect('teachers-login')
 	#get user
-	uid = request.session['uid']
-	user = db.child('teachers').child(uid).get().val();
+	tid = request.session['tid']
+	user = db.child('teachers').child(tid).get().val();
 	classes = {}
 	return render(request, 'teachers/dashboard.html', {'user': user})
 
 def newclass(request):
-	if 'uid' not in request.session:
+	if 'tid' not in request.session:
 	 	return redirect('teachers-login')
-	#get user
-	uid = request.session['uid']
-	user = db.child('teachers').child(uid).get().val();
+	tid = request.session['tid']
+	if request.method == "POST":
+		form = NewClassForm(request.POST)
+		if form.is_valid():
+			className = form.cleaned_data.get('name')
+			startingMoney = form.cleaned_data.get('startingCash')
+			joinCode = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+			print(joinCode)
+			db.child('teachers').child(tid).child('classes').child(joinCode).set({'className': className, 'startingMoney':startingMoney})
+			db.child('codes_tid').child(joinCode).set(tid)
+			messages.success(request, f'{className} class created')
+			return redirect('teachers-dashboard')
+		else:
+			messages.error(request, 'Invalid Entry')
+			return redirect('teachers-newclass')
+
+
+
+	tid = request.session['tid']
+	user = db.child('teachers').child(tid).get().val();
 	form = NewClassForm()
 	return render(request, 'teachers/newclass.html', {'form': form, 'user': user})
 

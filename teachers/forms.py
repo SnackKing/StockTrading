@@ -1,5 +1,4 @@
 from django import forms
-
 class LoginForm(forms.Form):
     email = forms.EmailField(
         label = 'Teacher Email',
@@ -65,7 +64,7 @@ class NewClassForm(forms.Form):
         label = 'Starting Money for Students',
         required = True,
         widget = forms.NumberInput(
-            attrs = {'class': 'form-control mb-4', 'name': 'StartingCash'}
+            attrs = {'class': 'form-control mb-4', 'name': 'StartingCash', 'min': 0}
         )
     )
 

@@ -5,8 +5,11 @@
 	{% if not user.classes %}
 		<h3>You haven't created any classes yet</h3>
 	{% else %}
+		<h3>Your Classes</h3>
 		{% for key,class in user.classes.items %}
-			<p>Stuff</p>
+			<p>{{class.className}}</p>
+			<p>{{class.startingMoney}}</p>
+			<p>{{key}}</p>
 		{% endfor %}
 	{% endif %}
 	<a class="btn btn-lg btn-primary bg-green" href="{% url 'teachers-newclass' %}">Create a Class</a>
