@@ -2,17 +2,38 @@
 {% block content %}
 <div class="container" >
 	<h3> Welcome to your dashboard {{user.name}} </h3>
+	<div class = "mt-3">
 	{% if not user.classes %}
 		<h3>You haven't created any classes yet</h3>
 	{% else %}
 		<h3>Your Classes</h3>
 		{% for key,class in user.classes.items %}
-			<p>{{class.className}}</p>
-			<p>{{class.startingMoney}}</p>
-			<p>{{key}}</p>
+			<article class="media content-section">
+	         <div class="media-body">
+	            <div class="article-metadata pb-3">
+	            	<span>
+	               <p class="mr-2" style="display: inline;">{{ class.className }}</p>
+	               <a class="btn btn-md btn-danger" style="float: right;display: inline;" href="{% url 'teachers-newclass' %}"><i class="fa fa-close"></i></a>
+	            	</span>
+	            </div>
+	            <div class="mt-1 mb-2"> 
+		            <p class="article-title font-weight-bold">Join Code: {{key}}</p>
+		            <p>Your students will use this code when they sign up</p>
+	        	</div>
+	            <p class="article-content"># of students: getnumberhere</p>
+	            <p class = "article-content">Starting Money: ${{class.startingMoney}}</p>
+	            {% if class.students %}
+	            <a class="btn btn-md btn-primary bg-green" href="classes/{{key}}">View Students</a>
+	            {% else %}
+	           	<p class = "font-weight-bold">No students to view</p>
+	            {% endif %}
+
+	         </div>
+	      	</article>
 		{% endfor %}
 	{% endif %}
-	<a class="btn btn-lg btn-primary bg-green" href="{% url 'teachers-newclass' %}">Create a Class</a>
+	<a class="btn btn-md btn-primary bg-green" href="{% url 'teachers-newclass' %}">Create a Class</a>
+	</div>
 
 
  </div>

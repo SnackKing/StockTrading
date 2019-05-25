@@ -1,0 +1,11 @@
+{% extends "teachers/base.html" %}
+{% block content %}
+<div class="container" >
+	{% for id, name in class.students.items %}
+	<p>{{id}}</p>
+	<p>{{name}}</p>
+	{% endfor %}
+	
+</div>
+	
+{% endblock content %}

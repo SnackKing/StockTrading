@@ -115,6 +115,16 @@ def newclass(request):
 	form = NewClassForm()
 	return render(request, 'teachers/newclass.html', {'form': form, 'user': user})
 
+def studentList(request, joinCode):
+	if 'tid' not in request.session:
+		return redirect('teachers-login')
+	tid = request.session['tid']
+	classData = db.child('teachers').child(tid).child('classes').child(joinCode).get().val();
+	print(classData)
+	return render(request, 'teachers/studentList.html', {'class': classData})
+
+
+
 
 
  
