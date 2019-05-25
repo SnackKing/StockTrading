@@ -51,7 +51,22 @@ class SignupForm(forms.Form):
         widget = forms.TextInput(
             attrs = {'class': 'form-control mb-4', 'name': 'JoinCode'}
         )
-
-
     )   
+class NewClassForm(forms.Form):
+    name = forms.CharField(
+        label = 'Class Name',
+        max_length = 100,
+        required = True,
+        widget = forms.TextInput(
+            attrs = {'class': 'form-control mb-4', 'name': 'Name'}
+        )
+    )
+    startingCash = forms.IntegerField(
+        label = 'Starting Money for Students',
+        required = True,
+        widget = forms.NumberInput(
+            attrs = {'class': 'form-control mb-4', 'name': 'StartingCash'}
+        )
+    )
+
     

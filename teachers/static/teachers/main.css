@@ -15,7 +15,9 @@ ul {
 .bg-green {
   background-color: #85bb65;
 }
-
+.bg-white{
+  background-color: white;
+}
 .site-header .navbar-nav .nav-link {
   color: #cbd5db;
 }

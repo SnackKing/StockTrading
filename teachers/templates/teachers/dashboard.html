@@ -1,7 +1,17 @@
 {% extends "teachers/base.html" %}
 {% block content %}
 <div class="container" >
-	<p> Welcome to your dashboard </p>
+	<h3> Welcome to your dashboard {{user.name}} </h3>
+	{% if not user.classes %}
+		<h3>You haven't created any classes yet</h3>
+	{% else %}
+		{% for key,class in user.classes.items %}
+			<p>Stuff</p>
+		{% endfor %}
+	{% endif %}
+	<a class="btn btn-lg btn-primary bg-green" href="{% url 'teachers-newclass' %}">Create a Class</a>
+
+
  </div>
 	
 {% endblock content %}
