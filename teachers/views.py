@@ -130,6 +130,16 @@ def removeStudent(request, joinCode, studentId):
 	print('Deleted')
 	return redirect('teachers-class', joinCode = joinCode)
 
+def deleteClass(request, joinCode):
+	if 'tid' not in request.session:
+		return redirect('teachers-login')
+	tid = request.session['tid']
+	db.child('teachers').child(tid).child('classes').child(joinCode).remove()
+	db.child('codes_tid').child(joinCode).remove()
+	messages.success(request, f'Class with join code {joinCode} deleted')
+	return redirect('teachers-dashboard')
+
+
 
  
 
