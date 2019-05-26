@@ -158,7 +158,9 @@ def signup(request):
             username = form.cleaned_data.get('name')
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-
+            code = form.cleaned_data.get('code')
+            print(code)
+           
             # create user and sign them in
             auth.create_user_with_email_and_password(email, password)
             user = auth.sign_in_with_email_and_password(email, password)
@@ -169,6 +171,17 @@ def signup(request):
             userInfo = info['users']
             userId = userInfo[0]['localId']
             request.session['uid'] = userId
+            #get class info if join code used
+            if not code == None:
+                tid = db.child('codes_tid').child(code).get().val();
+                print(tid);
+                if not tid == None:
+                    classInfo = db.child('teachers').child(tid).child('classes').child(code).get().val()
+                    print(classInfo)
+                    newUser['balance'] = int(classInfo['startingMoney'])
+                    newUser['className'] = classInfo['className']
+                    db.child('teachers').child(tid).child('classes').child(code).child('students').set({userId:username})
+
             db.child("users").child(userId).set(newUser)
 
             # return flash message and redirect
