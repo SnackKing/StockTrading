@@ -121,10 +121,14 @@ def studentList(request, joinCode):
 	tid = request.session['tid']
 	classData = db.child('teachers').child(tid).child('classes').child(joinCode).get().val();
 	print(classData)
-	return render(request, 'teachers/studentList.html', {'class': classData})
+	return render(request, 'teachers/studentList.html', {'class': classData, 'joinCode': joinCode})
 
 
-
+def removeStudent(request, joinCode, studentId):
+	tid = request.session['tid']
+	db.child('teachers').child(tid).child('classes').child(joinCode).child('students').child(studentId).remove()
+	print('Deleted')
+	return redirect('teachers-class', joinCode = joinCode)
 
 
  
