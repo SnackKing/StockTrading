@@ -21,7 +21,7 @@
 							<div class = "row article-content ml-1">
 								<td><p class="col-sm">{{name}}</p></td>
 								<td><p class = "col-sm">{{id}}</p></td>
-								<td><a class="btn btn-md btn-danger" href="removestudent/{{id}}"><i class="fa fa-close"></i></a></td>
+								<td><a class="btn btn-md btn-danger" href="removestudent/{{id}}"><i class="fa fa-close confirm-delete"></i></a></td>
 							</div>
 						</tr>
 					{% endfor %}
@@ -32,6 +32,11 @@
 	
 	
 </div>
+<script type="text/javascript">
+   $(document).on('click', '.confirm-delete', function(){
+    return confirm('Are you sure you want to remove this student?');
+})
+</script>
 
 	
 {% endblock content %}
