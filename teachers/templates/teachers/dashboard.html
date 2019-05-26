@@ -20,7 +20,7 @@
 		            <p class="article-title font-weight-bold">Join Code: {{key}}</p>
 		            <p>Your students will use this code when they sign up</p>
 	        	</div>
-	            <p class="article-content"># of students: getnumberhere</p>
+	            <p class="article-content">Number of students: {{class.students|length}}</p>
 	            <p class = "article-content">Starting Money: ${{class.startingMoney}}</p>
 	            {% if class.students %}
 	            <a class="btn btn-md btn-primary bg-green" href="classes/{{key}}">View Students</a>
