@@ -6,7 +6,7 @@
 	 <div class = 'mb-3'>
 		<form class="form-inline flexbox" action = ".">
 		  <i class="fas fa-search" aria-hidden="true"></i>
-		  <input class="form-control stretch" type="text" placeholder="Enter Symbol Here (ex: MSFT)" aria-label="Search" name = "symbol">
+		  <input class="form-control stretch input-box-dark" type="text" placeholder="Enter Symbol Here (ex: MSFT)" aria-label="Search" name = "symbol">
 		  <input type = "submit" value = "Search" class = "btn btn-primary ml-1 bg-green normal" >
 		</form>
 	</div>
@@ -33,7 +33,7 @@
 	      {% endif %}
    </div>
    <div class="col-md-4">
-      <div class="content-section">
+      <div class="content-section sidebar-closed-outer">
          <h3>Balance: ${{user.balance}}</h3>
          {% if not user.owned %}
          	<p class='text-muted'>Stocks you own will show up here</p>
@@ -41,7 +41,7 @@
 	         <p class='text-muted'>Stocks you own: 
 	         <ul class="list-group">
 	         	{% for key, value in owned.items %}
-	            <li class="list-group-item list-group-item-light">{{value.symbol}}: ${{value.price}} <span class = "{% if value.day_change|slice:'1' == '-' %}downtrend{% else %}uptrend{% endif %}">({{value.day_change}})</span> <br/> {{value.numShares}} shares</li>
+	            <li class="list-group-item list-group-item-light sidebar-closed-inner">{{value.symbol}}: ${{value.price}} <span class = "{% if value.day_change|slice:'1' == '-' %}downtrend{% else %}uptrend{% endif %}">({{value.day_change}})</span> <br/> {{value.numShares}} shares</li>
 	            {% endfor %}
 	         </ul>
 	         </p>

@@ -35,7 +35,15 @@ class SignupForm(forms.Form):
 		widget = forms.TextInput(
 	    	attrs = {'class': 'form-control mb-4', 'name': 'Email'}
 		)
-	)   
+	)
+	code = forms.CharField(
+        label = 'Join Code (Optional)',
+        max_length = 10,
+        required = False,
+        widget = forms.TextInput(
+            attrs = {'class': 'form-control mb-4', 'name': 'JoinCode'}
+        )
+    )   
 	password = forms.CharField(
 		label = 'Password',
 		max_length = 1000,

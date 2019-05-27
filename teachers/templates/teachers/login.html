@@ -1,0 +1,16 @@
+{% extends "teachers/base.html" %}
+{% block content %}
+<div class="col-sm-6 login-form" >
+    <form class="" method="POST">       
+    	  {% csrf_token %}
+      <h2 class="login-header mb-4 centeredText">Please login</h2>
+          {{ form.as_p }}
+      <button class="btn btn-lg btn-primary btn-block bg-green" type="submit">Login</button>   
+    </form>
+
+     <p class="login-header">Not Registered?  <a class="" href="{% url 'teachers-signup' %}">Create an Account</a> </p>  
+
+
+ </div>
+	
+{% endblock content %}
