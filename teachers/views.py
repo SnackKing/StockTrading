@@ -8,6 +8,8 @@ import json
 import requests
 import string
 import random
+from collections import OrderedDict
+
 
 config = {
 	"apiKey": "AIzaSyAzXh-si71dEDldZkLmbY7l-_NZ8VJTfs4",
@@ -138,6 +140,64 @@ def deleteClass(request, joinCode):
 	db.child('codes_tid').child(joinCode).remove()
 	messages.success(request, f'Class with join code {joinCode} deleted')
 	return redirect('teachers-dashboard')
+
+def account(request):
+	if 'tid' not in request.session:
+		return redirect('teachers-login')
+	return render(request, 'teachers/account.html', {})
+
+def leaderboard(request, joinCode):
+	if 'tid' not in request.session:
+		return redirect('teachers-login')
+	tid = request.session['tid']
+	students = db.child('teachers').child(tid).child('classes').child(joinCode).child('students').get().val()
+	print(students)
+	leaderboard = {}
+	for studentId, name in students.items():
+		studentVal = getPortfolioValue(studentId)
+		leaderboard[studentId] = (studentVal, name)
+	orderedKeys =sorted(leaderboard.keys(), key=lambda x: leaderboard[x][0], reverse = True)
+	print("RESULT")
+	orderedLeaderboard = OrderedDict()
+	for key in orderedKeys:
+		orderedLeaderboard[key] = leaderboard[key]
+	print(orderedLeaderboard)
+	return render(request, 'teachers/leaderboard.html', {'leaderboard':orderedLeaderboard})
+
+def getPortfolioValue(studentId):
+	user = db.child('users').child(studentId).get().val()
+	portfolio = getOwnedEquity(user) if 'owned' in user else {}
+	totalVal = sumAllAssets(user, portfolio)
+	return totalVal
+def getOwnedEquity(user):
+    stocks = ""
+    for stock in user['owned']:
+        stocks += str(stock)
+        stocks += ","
+    #if at lease one stock was added, cut off extra trailing ','
+    stocks = stocks[:-1] if stocks != "" else stocks
+    print(stocks)
+    parameters = {
+        "token": 'sk_0a0d416a40b6401a87b46811783be7be', "symbols": stocks}
+    response = requests.get(
+        "https://cloud.iexapis.com/stable/tops", params=parameters)
+    result = json.loads(response.content.decode('utf-8'))
+    equitys = {}
+    print(result)
+    for item in result:
+        equitys[item['symbol']] = round(float(item['lastSalePrice']) * int(user['owned'][item['symbol']]),2)
+    return equitys
+
+def sumAllAssets(user, equitys):
+    stockVal = 0
+    for stock in equitys:
+        stockVal += equitys[stock]
+    return user['balance'] + stockVal
+
+
+
+
+
 
 
 

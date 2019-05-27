@@ -1,0 +1,31 @@
+{% extends "teachers/base.html" %}
+{% block content %}
+<div class="container" >
+	<article class="media content-section">
+           <div class="media-body">
+              <div class="">
+                 <p class="mr-2">Leaderboard</p>
+              </div>
+             <table class = "table">
+             	<thead>
+				    <tr>
+				      <th scope="col">Name</th>
+				      <th scope="col">Portfolio Value</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+		             {% for key, val in leaderboard.items %}
+		             	<tr>
+							<div class = "row article-content ml-1">
+								<td><p class="col-sm">{{val.1}}</p></td>
+								<td><p class = "col-sm">${{val.0}}</p></td>
+							</div>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+           </div>
+	</article>
+</div>
+	
+{% endblock content %}

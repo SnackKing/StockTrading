@@ -180,7 +180,7 @@ def signup(request):
                     print(classInfo)
                     newUser['balance'] = int(classInfo['startingMoney'])
                     newUser['className'] = classInfo['className']
-                    db.child('teachers').child(tid).child('classes').child(code).child('students').set({userId:username})
+                    db.child('teachers').child(tid).child('classes').child(code).child('students').child(userId).set(username)
 
             db.child("users").child(userId).set(newUser)
 
