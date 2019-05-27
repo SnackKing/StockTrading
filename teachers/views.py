@@ -151,17 +151,14 @@ def leaderboard(request, joinCode):
 		return redirect('teachers-login')
 	tid = request.session['tid']
 	students = db.child('teachers').child(tid).child('classes').child(joinCode).child('students').get().val()
-	print(students)
 	leaderboard = {}
 	for studentId, name in students.items():
 		studentVal = getPortfolioValue(studentId)
 		leaderboard[studentId] = (studentVal, name)
 	orderedKeys =sorted(leaderboard.keys(), key=lambda x: leaderboard[x][0], reverse = True)
-	print("RESULT")
 	orderedLeaderboard = OrderedDict()
 	for key in orderedKeys:
 		orderedLeaderboard[key] = leaderboard[key]
-	print(orderedLeaderboard)
 	return render(request, 'teachers/leaderboard.html', {'leaderboard':orderedLeaderboard})
 
 def getPortfolioValue(studentId):
@@ -183,6 +180,7 @@ def getOwnedEquity(user):
         "https://cloud.iexapis.com/stable/tops", params=parameters)
     result = json.loads(response.content.decode('utf-8'))
     equitys = {}
+    print("API RESULT")
     print(result)
     for item in result:
         equitys[item['symbol']] = round(float(item['lastSalePrice']) * int(user['owned'][item['symbol']]),2)
