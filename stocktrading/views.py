@@ -11,6 +11,8 @@ from django.views.decorators.csrf import csrf_exempt
 import collections
 from collections import OrderedDict
 import random
+from datetime import datetime, time
+from pytz import timezone
 
 
 
@@ -479,4 +481,15 @@ def randomKey():
         return "o3yCTA0mVXrkep8zrRwmL2vt6kPJ8KPgZdbF6D8whZNDRkGqAteM3TewEAsK"
     else:
         return "mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX"
+
+def isMarketOpen(request):
+  dayOfWeek = datetime.today().weekday()
+  print(dayOfWeek)
+  if dayOfWeek >= 5:
+    data = {"open": False}
+    return JsonResponse(data)
+  check_time = datetime.now(timezone('EST')).time()
+  print(check_time)
+  date = {'open':check_time >= time(9,30) and check_time <= time(17,0)}
+  return JsonResponse(data)
 
