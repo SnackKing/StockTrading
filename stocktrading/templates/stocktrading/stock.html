@@ -74,33 +74,40 @@ var myChart = new Chart(ctx, {
 
 });
 </script>
-<h6> Your balance: ${{user.balance}} </h3>
- <div class = 'mt-3 mb-3 col-lg-8 row input-group flexbox'>
-        <form  method = "post" class="form-inline" action = "{% url 'stocktrading-stock-buy' symbol=stock.symbol %}">
-          {% csrf_token %}       
-          <i class="" aria-hidden="true"></i>
-          <input name="price" type="hidden" value="{{stock.price}}" />
-          <input id = "buy" class="form-control stretch" type="number" min = "0" step = "1" placeholder="Number of Shares" aria-label="buy" name = "count">
-          <div class = "input-group-btn normal">
-             <input id = "buybtn" disabled = "true" type = "submit" value = "Buy" class = "btn btn-primary bg-green" >
-          </div>
-        </form>
-</div>
-{% if owned %}
-  <h6> You own {{numShares}} shares of {{symbol}} </h6>
-    <div class = 'mt-3 mb-3 col-lg-8 row input-group flexbox'>
-        <form method = "post" class="form-inline" action = "{% url 'stocktrading-stock-sell' symbol=stock.symbol %}">
-           {% csrf_token %}       
-          <i class="" aria-hidden="true"></i>
-          <input name="price" type="hidden" value="{{ stock.price }}" />
-          <input id = "sell" class="form-control stretch" type="number" min = "0" step = "1" placeholder="Number of Shares" aria-label="sell" name = "count">
-          <div class = "input-group-btn normal">
-            <input id = "sellbtn" disabled="true" type = "submit" value = "Sell" class = "btn btn-primary bg-green" >
-          </div>
-        </form>
+
+{% if isOpen %}
+    <h6> Your balance: ${{user.balance}} </h3>
+     <div class = 'mt-3 mb-3 col-lg-8 row input-group flexbox'>
+            <form  method = "post" class="form-inline" action = "{% url 'stocktrading-stock-buy' symbol=stock.symbol %}">
+              {% csrf_token %}       
+              <i class="" aria-hidden="true"></i>
+              <input name="price" type="hidden" value="{{stock.price}}" />
+              <input id = "buy" class="form-control stretch input-box-dark" type="number" min = "0" step = "1" placeholder="Number of Shares" aria-label="buy" name = "count">
+              <div class = "input-group-btn normal">
+                 <input id = "buybtn" disabled = "true" type = "submit" value = "Buy" class = "btn btn-primary bg-green" >
+              </div>
+            </form>
     </div>
+    {% if owned %}
+      <h6> You own {{numShares}} shares of {{symbol}} </h6>
+        <div class = 'mt-3 mb-3 col-lg-8 row input-group flexbox'>
+            <form method = "post" class="form-inline" action = "{% url 'stocktrading-stock-sell' symbol=stock.symbol %}">
+               {% csrf_token %}       
+              <i class="" aria-hidden="true"></i>
+              <input name="price" type="hidden" value="{{ stock.price }}" />
+              <input id = "sell" class="form-control stretch input-box-dark" type="number" min = "0" step = "1" placeholder="Number of Shares" aria-label="sell" name = "count">
+              <div class = "input-group-btn normal">
+                <input id = "sellbtn" disabled="true" type = "submit" value = "Sell" class = "btn btn-primary bg-green" >
+              </div>
+            </form>
+        </div>
+    {% else %}
+     <h6> You don't own any shares of {{symbol}} </h3>
+    {% endif %}
 {% else %}
- <h6> You don't own any shares of {{symbol}} </h3>
+  <div style = "background-color: FireBrick; text-align: center" class="p-2 m-2">
+    <p>The markets are currently closed.</p>
+  </div>
 {% endif %}
 <article class="media content-section">
            <div class="media-body">
@@ -213,6 +220,6 @@ $("#sell").on('input', function() {
    }
 
 });
-</script>		
+</script>	
 </div>
 {% endblock content %}

@@ -261,7 +261,7 @@ def stocks(request, symbol):
     except KeyError:
         pass
     newsData = getNewsData(symbol)
-    context = {'symbol': symbol, 'stock': data, 'points': priceList, 'dayLabels': dayList, 'user': user,'name':request.session['name'], 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn, 'newsData':newsData}
+    context = {'symbol': symbol, 'stock': data, 'points': priceList, 'dayLabels': dayList, 'user': user,'name':request.session['name'], 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn, 'newsData':newsData, 'isOpen':isMarketOpen()}
     return render(request, 'stocktrading/stock.html', context)
 
 def getNewsData(symbol):
@@ -482,14 +482,10 @@ def randomKey():
     else:
         return "mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX"
 
-def isMarketOpen(request):
+def isMarketOpen():
   dayOfWeek = datetime.today().weekday()
-  print(dayOfWeek)
   if dayOfWeek >= 5:
-    data = {"open": False}
-    return JsonResponse(data)
+    return False
   check_time = datetime.now(timezone('EST')).time()
-  print(check_time)
-  date = {'open':check_time >= time(9,30) and check_time <= time(17,0)}
-  return JsonResponse(data)
+  return check_time >= time(9,30) and check_time <= time(17,0)
 

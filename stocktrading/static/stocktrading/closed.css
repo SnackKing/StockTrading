@@ -6,7 +6,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: white !important;
+  color: lightgrey !important;
 }
 
 article{
@@ -33,5 +33,8 @@ a{
 .input-box-dark{
 	background: #4F4E4E !important;
 	background-color: #4F4E4E !important 
-	border-colorblack
+	border-color: black;
+}
+p {
+	color: lightgrey !important;
 }
