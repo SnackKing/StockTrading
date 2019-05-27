@@ -86,6 +86,7 @@ def home(request):
     context = {
         'user': user,
         'uid': uid,
+        'name':request.session['name'],
         'stocks': data,
         'watched': watchedStocks,
         'owned': ownedStocks,
@@ -110,16 +111,7 @@ def getWatchedStocks(data, user):
     return watched
 
 def about(request):
-    #redirect if not signed in
-    if "uid" not in request.session:
-        return redirect('stocktrading-login')
-    #get user
-    uid = request.session['uid']
-    user = db.child('users').child(uid).get().val();
-    context = {
-    'user':user
-    }
-    return render(request, 'stocktrading/about.html', context)
+    return render(request, 'stocktrading/about.html', {'name': request.session['name']})
 
 
 def login(request):
@@ -139,6 +131,7 @@ def login(request):
             request.session['uid'] = userid
             user = db.child("users").child(userid).get()
             name = user.val()['name']
+            request.session['name'] = name
             messages.success(request, f'{name} has been logged in')
             return redirect('stocktrading-home')
         else:
@@ -171,6 +164,7 @@ def signup(request):
             userInfo = info['users']
             userId = userInfo[0]['localId']
             request.session['uid'] = userId
+            request.session['name'] = username
             #get class info if join code used
             if not code == None:
                 tid = db.child('codes_tid').child(code).get().val();
@@ -265,7 +259,7 @@ def stocks(request, symbol):
     except KeyError:
         pass
     newsData = getNewsData(symbol)
-    context = {'symbol': symbol, 'stock': data, 'points': priceList, 'dayLabels': dayList, 'user': user, 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn, 'newsData':newsData}
+    context = {'symbol': symbol, 'stock': data, 'points': priceList, 'dayLabels': dayList, 'user': user,'name':request.session['name'], 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn, 'newsData':newsData}
     return render(request, 'stocktrading/stock.html', context)
 
 def getNewsData(symbol):
@@ -423,7 +417,7 @@ def account(request):
         topStocks = dict(collections.Counter(trans).most_common(5))
     equities = getOwnedEquity(user) if "owned" in user else {}
     totalValue = round(sumAllAssets(user,equities),2)
-    return render(request, 'stocktrading/account.html', {'user': user, 'favs': topStocks, 'equities': equities, 'total': totalValue})
+    return render(request, 'stocktrading/account.html', {'user': user,'name': request.session['name'], 'favs': topStocks, 'equities': equities, 'total': totalValue})
 
 def getOwnedEquity(user):
     stocks = ""
@@ -471,10 +465,11 @@ def transactions(request):
             transactions["sells"] = newSells;
 
 
-    return render(request, 'stocktrading/transactions.html', {'transactions': transactions, 'user': user})
+    return render(request, 'stocktrading/transactions.html', {'transactions': transactions, 'user': user, 'name':request.session['name']})
 
 def signout(request):
     del request.session['uid']
+    del request.session['name']
     return redirect("stocktrading-landing")
 
 #Using 2 API keys because why not

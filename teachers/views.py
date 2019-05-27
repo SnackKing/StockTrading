@@ -44,6 +44,7 @@ def login(request):
 				return redirect('teachers-login')
 			request.session['tid'] = userid
 			name = teachers[userid]['name']
+			request.session['name'] = name
 			messages.success(request, f'{name} has been logged in')
 			return redirect('teachers-dashboard')
 	else:
@@ -70,6 +71,7 @@ def signup(request):
 			userInfo = info['users']
 			userId = userInfo[0]['localId']
 			request.session['tid'] = userId
+			request.session['name'] = username
 			db.child("teachers").child(userId).set(newUser)
 
 			# return flash message and redirect
@@ -89,7 +91,7 @@ def dashboard(request):
 	tid = request.session['tid']
 	user = db.child('teachers').child(tid).get().val();
 	classes = {}
-	return render(request, 'teachers/dashboard.html', {'user': user})
+	return render(request, 'teachers/dashboard.html', {'user': user, 'name':request.session['name']})
 
 def newclass(request):
 	if 'tid' not in request.session:
@@ -115,7 +117,7 @@ def newclass(request):
 	tid = request.session['tid']
 	user = db.child('teachers').child(tid).get().val();
 	form = NewClassForm()
-	return render(request, 'teachers/newclass.html', {'form': form, 'user': user})
+	return render(request, 'teachers/newclass.html', {'form': form, 'user': user, 'name':request.session['name']})
 
 def studentList(request, joinCode):
 	if 'tid' not in request.session:
@@ -123,7 +125,7 @@ def studentList(request, joinCode):
 	tid = request.session['tid']
 	classData = db.child('teachers').child(tid).child('classes').child(joinCode).get().val();
 	print(classData)
-	return render(request, 'teachers/studentList.html', {'class': classData, 'joinCode': joinCode})
+	return render(request, 'teachers/studentList.html', {'class': classData, 'joinCode': joinCode, 'name':request.session['name']})
 
 
 def removeStudent(request, joinCode, studentId):
@@ -159,7 +161,7 @@ def leaderboard(request, joinCode):
 	orderedLeaderboard = OrderedDict()
 	for key in orderedKeys:
 		orderedLeaderboard[key] = leaderboard[key]
-	return render(request, 'teachers/leaderboard.html', {'leaderboard':orderedLeaderboard})
+	return render(request, 'teachers/leaderboard.html', {'leaderboard':orderedLeaderboard, 'name':request.session['name']})
 
 def getPortfolioValue(studentId):
 	user = db.child('users').child(studentId).get().val()
