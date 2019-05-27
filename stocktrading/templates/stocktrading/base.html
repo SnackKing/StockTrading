@@ -20,9 +20,8 @@
 		function getStylesheet() {
 		      var currentTime = new Date().getHours();
 		      console.log(currentTime)
-		      if (!(9.5 <= currentTime&&currentTime < 17)) {
+		      if (!(9.5 <= currentTime&&currentTime < 17) || new Date().getDay() == 0 || new Date().getDay() == 6) {
 		       document.write("<link rel='stylesheet' href='{% static 'stocktrading/closed.css' %}' type='text/css'>");
-		       console.log("Running")
 		      }
 		}
 		getStylesheet();
