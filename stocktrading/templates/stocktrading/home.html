@@ -24,9 +24,7 @@
 		            <h2 class="inline"><a class="article-title" href="stocks/{{value.symbol}}">{{ value.price }}</a></h2>
 		            <h5 class="inline">USD</h5>
 	        	</div>
-	            <div class = "{% if value.day_change|slice:'1' == '-' %}downtrend{% else %}uptrend{% endif %}">
-	            	<p class="article-content">{{value.day_change}} ({{value.change_pct}}%)</p>
-	        	</div>
+	            	<p class="article-content {% if value.day_change|slice:'1' == '-' %}downtrend{% else %}uptrend{% endif %}">{{value.day_change}} ({{value.change_pct}}%)</p>
 	         </div>
 	      </article>
 	      {% endfor %}

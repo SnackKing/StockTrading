@@ -15,6 +15,12 @@ article{
 	color: lightgrey !important;
 	border-color: black !important;
 }
+.login-form{
+	background: #2c2c2d !important;
+	background-color: #2c2c2d !important; 
+	color: lightgrey !important;
+	border-color: black !important;
+}
 a{
 	color: lightgrey !important;
 }
@@ -26,15 +32,23 @@ a{
 }
 .sidebar-closed-inner{
 	background: #4F4E4E !important;
-	background-color: #4F4E4E !important 
+	background-color: #4F4E4E !important; 
 	color: lightgrey !important;
 	border-color: black !important;
 }
 .input-box-dark{
 	background: #4F4E4E !important;
-	background-color: #4F4E4E !important 
+	background-color: #4F4E4E !important; 
 	border-color: black;
+	color: lightgrey !important;
 }
 p {
-	color: lightgrey !important;
+	color: lightgrey;
+}
+
+.uptrend{
+ color:green !important;
+}
+.downtrend{
+  color: red !important;
 }

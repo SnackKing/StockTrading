@@ -124,10 +124,10 @@ a.article-title:hover {
   white-space: nowrap;
 }
 .uptrend{
- color:green;
+ color:green !important;
 }
 .downtrend{
-  color: red;
+  color: red !important;
 }
 .floatLeft{
   float: left;

@@ -6,7 +6,7 @@ class LoginForm(forms.Form):
 		max_length = 1000,
 		required = True,
 		widget = forms.TextInput(
-	    	attrs = {'class': 'form-control mb-4', 'name': 'Email'}
+	    	attrs = {'class': 'form-control mb-4 input-box-dark', 'name': 'Email'}
 		)
 	)   
 	password = forms.CharField(
@@ -14,7 +14,7 @@ class LoginForm(forms.Form):
 		max_length = 1000,
 		required = True,
 		widget = forms.PasswordInput(
-	    	attrs = {'class': 'form-control mb-4', 'name': 'Password'}
+	    	attrs = {'class': 'form-control mb-4 input-box-dark', 'name': 'Password'}
 		)
 	)   
 
@@ -25,7 +25,7 @@ class SignupForm(forms.Form):
     	max_length = 1000,
     	required = True,
     	widget = forms.TextInput(
-        	attrs = {'class': 'form-control mb-4', 'name': 'Name'}
+        	attrs = {'class': 'form-control mb-4 input-box-dark', 'name': 'Name'}
     	)
 	)   
 	email = forms.EmailField(
@@ -33,7 +33,7 @@ class SignupForm(forms.Form):
 		max_length = 1000,
 		required = True,
 		widget = forms.TextInput(
-	    	attrs = {'class': 'form-control mb-4', 'name': 'Email'}
+	    	attrs = {'class': 'form-control mb-4 input-box-dark', 'name': 'Email'}
 		)
 	)
 	code = forms.CharField(
@@ -41,7 +41,7 @@ class SignupForm(forms.Form):
         max_length = 10,
         required = False,
         widget = forms.TextInput(
-            attrs = {'class': 'form-control mb-4', 'name': 'JoinCode'}
+            attrs = {'class': 'form-control mb-4 input-box-dark', 'name': 'JoinCode'}
         )
     )   
 	password = forms.CharField(
@@ -49,7 +49,7 @@ class SignupForm(forms.Form):
 		max_length = 1000,
 		required = True,
 		widget = forms.PasswordInput(
-	    	attrs = {'class': 'form-control mb-4', 'name': 'Password'}
+	    	attrs = {'class': 'form-control mb-4 input-box-dark', 'name': 'Password'}
 		)
 	)
 
@@ -59,7 +59,7 @@ class ResetPass(forms.Form):
         max_length = 1000,
         required = True,
         widget = forms.TextInput(
-            attrs = {'class': 'form-control mb-4', 'name': 'Email'}
+            attrs = {'class': 'form-control mb-4 input-box-dark', 'name': 'Email'}
         )
     )
 
