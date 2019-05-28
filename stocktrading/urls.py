@@ -5,6 +5,7 @@ urlpatterns = [
     path('about/', views.about, name ='stocktrading-about'),
     path('login/', views.login, name = 'stocktrading-login'),
     path('signup/', views.signup, name = 'stocktrading-signup'),
+    path('newpassword/', views.newpassword, name = 'stocktrading-newpass'),
     path('stocks/<str:symbol>/', views.stocks, name = 'stocktrading-stock'),
     path('ajax/addremove/', views.add, name='add-remove-stock'),
     path('stocks/<str:symbol>/buy/', views.buy, name = 'stocktrading-stock-buy'),

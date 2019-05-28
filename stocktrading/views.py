@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 import pyrebase
 import os
-from .forms import SignupForm, LoginForm
+from .forms import SignupForm, LoginForm, ResetPass
 from django.contrib import messages
 import json
 import requests
@@ -473,6 +473,26 @@ def signout(request):
     del request.session['uid']
     del request.session['name']
     return redirect("stocktrading-landing")
+
+def newpassword(request):
+    if request.method == 'POST':
+        form = ResetPass(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            try:
+                auth.send_password_reset_email(email)
+                messages.success(request, f'A password reset email has been sent to {email}')
+                return redirect('stocktrading-login')
+            except:
+                messages.error(request, f'Something went wrong')
+                return redirect('stocktrading-newpass')
+
+
+
+    form = ResetPass()
+    return render(request, 'stocktrading/newpassword.html', {'form': form})
+ 
+
 
 #Using 2 API keys because why not
 def randomKey():

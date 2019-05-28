@@ -20,6 +20,6 @@ from teachers import views as teacher_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('stocktrading.urls')),
-    path('teachers/', include('teachers.urls')),
+    path('teachers/', include('teachers.urls'))
 
 ]

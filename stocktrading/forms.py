@@ -51,5 +51,16 @@ class SignupForm(forms.Form):
 		widget = forms.PasswordInput(
 	    	attrs = {'class': 'form-control mb-4', 'name': 'Password'}
 		)
-	)   
+	)
+
+class ResetPass(forms.Form):
+    email = forms.EmailField(
+        label = 'Email',
+        max_length = 1000,
+        required = True,
+        widget = forms.TextInput(
+            attrs = {'class': 'form-control mb-4', 'name': 'Email'}
+        )
+    )
+
     
