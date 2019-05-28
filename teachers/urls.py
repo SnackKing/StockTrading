@@ -11,6 +11,7 @@ urlpatterns = [
     path('dashboard/classes/<str:joinCode>/removestudent/<str:studentId>', views.removeStudent, name = 'teachers-removeStudent'),
     path('dashboard/classes/<str:joinCode>/deleteclass', views.deleteClass, name = 'teachers-deleteclass'),
     path('', views.landing, name = 'teachers-landing'),
+    path('signout/', views.signout, name = 'teachers-signout'),
 
 
   
