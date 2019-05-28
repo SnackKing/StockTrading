@@ -37,7 +37,7 @@
 	        </div>
 	        <!-- Navbar Right Side -->
 	        <div class="navbar-nav">
-	          {% if user == None %}
+	          {% if name == None %}
 		          <a class="nav-item nav-link" href="{% url 'teachers-login' %}">Login</a>
 		          <a class="nav-item nav-link" href="{% url 'teachers-signup' %}">Register</a>
 	          {% else %}

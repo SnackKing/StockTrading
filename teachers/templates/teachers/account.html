@@ -1,0 +1,19 @@
+{% extends "teachers/base.html" %}
+{% block content %}
+
+<div class = "container">
+	<h2>Your Account</h2>
+	<article class="media content-section">
+           <div class="media-body">
+              <div class="article-metadata">
+                 <p class="mr-2">Personal Info</p>
+              </div>
+              <div class = "row mt-4">
+	              <p class = "col-sm">Name: {{user.name}}</p>
+	              <p class = "col-sm">Email: {{user.email}} </p>
+          	  </div>
+           </div>
+	</article>
+
+</div>
+{% endblock %}

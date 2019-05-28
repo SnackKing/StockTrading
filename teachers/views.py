@@ -152,7 +152,9 @@ def deleteClass(request, joinCode):
 def account(request):
 	if 'tid' not in request.session:
 		return redirect('teachers-login')
-	return render(request, 'teachers/account.html', {})
+	tid = request.session['tid']
+	teacher = db.child('teachers').child(tid).get().val();
+	return render(request, 'teachers/account.html', {'user': teacher, 'name': request.session['name']})
 
 def leaderboard(request, joinCode):
 	if 'tid' not in request.session:
@@ -161,7 +163,7 @@ def leaderboard(request, joinCode):
 	students = db.child('teachers').child(tid).child('classes').child(joinCode).child('students').get().val()
 	leaderboard = {}
 	for studentId, name in students.items():
-		studentVal = getPortfolioValue(studentId)
+		studentVal = round(getPortfolioValue(studentId),2)
 		leaderboard[studentId] = (studentVal, name)
 	orderedKeys =sorted(leaderboard.keys(), key=lambda x: leaderboard[x][0], reverse = True)
 	orderedLeaderboard = OrderedDict()
