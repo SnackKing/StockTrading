@@ -24,6 +24,8 @@ db = firebase.database()
 auth = firebase.auth()
 
 # Create your views here.
+def landing(request):
+	return render(request, 'teachers/landing.html')
 def login(request):
 	if request.method == 'POST':
 		form = LoginForm(request.POST)

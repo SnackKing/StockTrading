@@ -10,6 +10,7 @@ urlpatterns = [
     path('dashboard/classes/<str:joinCode>/leaderboard/', views.leaderboard, name = 'teachers-leaderboard'),
     path('dashboard/classes/<str:joinCode>/removestudent/<str:studentId>', views.removeStudent, name = 'teachers-removeStudent'),
     path('dashboard/classes/<str:joinCode>/deleteclass', views.deleteClass, name = 'teachers-deleteclass'),
+    path('', views.landing, name = 'teachers-landing'),
 
 
   
