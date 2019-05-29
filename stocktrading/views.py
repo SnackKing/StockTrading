@@ -397,8 +397,12 @@ def updateReturn(symbol, amount, uid):
     db.child("users").child(uid).child("stats").child("totalreturn").update({symbol: newTotal })
 
 def landing(request):
-    name = request.session['name'] if 'name' in request.session else None
-    uid = request.session['uid'] if 'uid' in request.session else None  
+    name = None
+    uid = None
+    if 'name' in request.session:
+        name = request.session['name']
+    if 'uid' in request.session:
+        uid = request.session['uid']
     return render(request, 'stocktrading/landing.html', {'name': name, 'uid': uid })
 
 #creates a new buy order in the database with timestamp, symbol, number of shares, and price bought at

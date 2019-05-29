@@ -27,8 +27,12 @@ auth = firebase.auth()
 
 
 def landing(request):
-    name = request.session['name'] if 'name' in request.session else None
-    tid = request.session['tid'] if 'tid' in request.session else None  
+    name = None
+    tid = None
+    if 'name' in request.session:
+        name = request.session['name']
+    if 'tid' in request.session:
+        tid = request.session['tid']
     return render(request, 'teachers/landing.html', {'name':name, 'tid': tid})
 
 
