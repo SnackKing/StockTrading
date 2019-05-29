@@ -53,7 +53,7 @@
 	        </div>
 	        <!-- Navbar Right Side -->
 	        <div class="navbar-nav">
-	          {% if user is None %}
+	          {% if name == None %}
 		          <a class="nav-item nav-link" href="{% url 'stocktrading-login' %}">Login</a>
 		          <a class="nav-item nav-link" href="{% url 'stocktrading-signup' %}">Register</a>
 	          {% else %}
