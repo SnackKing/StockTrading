@@ -68,4 +68,14 @@ class NewClassForm(forms.Form):
         )
     )
 
+
+class ResetPass(forms.Form):
+    email = forms.EmailField(
+        label = 'Email',
+        max_length = 1000,
+        required = True,
+        widget = forms.TextInput(
+            attrs = {'class': 'form-control mb-4 input-box-dark', 'name': 'Email'}
+        )
+    )
     

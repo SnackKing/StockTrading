@@ -6,6 +6,7 @@ urlpatterns = [
     path('signup/', views.signup, name = 'teachers-signup'),
     path('account/', views.account, name = 'teachers-account'),
     path('newclass/', views.newclass, name = 'teachers-newclass'),
+    path('newpassword/', views.newpassword, name = 'teachers-newpass'),
     path('dashboard/classes/<str:joinCode>/', views.studentList, name = 'teachers-class'),
     path('dashboard/classes/<str:joinCode>/leaderboard/', views.leaderboard, name = 'teachers-leaderboard'),
     path('dashboard/classes/<str:joinCode>/removestudent/<str:studentId>', views.removeStudent, name = 'teachers-removeStudent'),
