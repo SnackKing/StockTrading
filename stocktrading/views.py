@@ -40,7 +40,7 @@ def splitStocks(stocks):
 def home(request):
     #redirect user if they arent signed in
     if 'uid' not in request.session:
-        return redirect('stocktrading-login')
+        return redirect('stocktrading-landing')
 
     #get user
     uid = request.session['uid']
