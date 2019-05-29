@@ -1,0 +1,180 @@
+body {
+  background: #fafafa;
+  color: #333333;
+  margin-top: 5rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #444444;
+}
+
+ul {
+  margin: 0;
+}
+
+.bg-green {
+  background-color: #85bb65;
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #cbd5db;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.article-title {
+  color: #444444;
+}
+
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
+}
+
+.article-content {
+  white-space: pre-line;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.article-metadata a:hover {
+  color: #333;
+  text-decoration: none;
+}
+
+.article-svg {
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
+
+.account-heading {
+  font-size: 2.5rem;
+}
+
+.form-input {
+  margin: 2em;
+}
+
+.login-buton {
+  background-color:#85bb65;
+}
+
+.invisibile {
+  display: none !important;
+}
+
+.visible {
+  visibility:visible;
+}
+
+.blacklink {
+  color: black;
+}
+.nav-menu {
+  background-color: white;
+  color: black;
+}
+.whitebutton{
+  background-color: white; 
+}
+.alert-error{
+    border: 2px red solid;
+    background-color: #F67C6D;
+}
+.custom-control-label::before {
+    background-color: #85bb65;
+}
+#singleline{
+  white-space: nowrap;
+}
+.uptrend{
+ color:green;
+}
+.downtrend{
+  color: red;
+}
+.floatLeft{
+  float: left;
+  text-align:left;
+}
+.floatRight{
+  float: right;
+  text-align:right;
+}
+.inline{
+  display: inline;
+}
+.articleTag{
+  background-color: #85bb65;
+  border-radius: 5px;
+  color: white;
+  padding: 5px;
+}
+.article-Positive{
+  color: green;
+}
+.article-Negative{
+  color: red;
+}
+.article-Neutral{
+  color: gray;
+}
+.articleDesktop{
+  display: flex;
+  align-items: flex-start;
+}
+.imageLeft{
+  float: left;
+  width: 30%;
+  height: auto;
+}
+.newsArticle{
+  align-items: flex-start;
+  margin-left: 10px;
+}
+@media all and (max-width:500px){
+    .imageLeft, .newsArticle{
+        float:none;
+        width: 100%;
+    }
+    .articleDesktop{
+      display: block;
+    }
+}
+.flexbox { display: flex; }
+.flexbox .stretch { flex: 1; }
+.flexbox .normal { flex: 0; margin: 0 0 0 1rem; }
+.flexbox div input { padding: .5em 1em; width: 100%; }
+.flexbox div button { padding: .5em 1em; white-space: nowrap; }

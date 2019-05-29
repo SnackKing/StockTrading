@@ -1,0 +1,21 @@
+body{
+	background: #f9f9f9	;
+}
+.login-form{
+	margin: 0 auto;
+	background: #FFFFFF;
+	padding:3em;
+}
+.login-header{
+	margin-top: 1em;
+}
+.login-field{
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+.login-button{
+	background-color: #5f788a;
+}
+.centeredText{
+	text-align: center;
+}

@@ -1,0 +1,21 @@
+body {
+  background: url("/static/teachers/media/classroom.a336f90c7af5.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+.whitetext{
+	color: white;
+}
+.rowButton{
+	display: inline-block;
+    vertical-align: top;
+}
+hr{
+	background-color: white;
+}
+.noborder{
+	border: none !important;
+	outline: none;
+}
