@@ -27,7 +27,9 @@ auth = firebase.auth()
 
 
 def landing(request):
-    return render(request, 'teachers/landing.html')
+    name = request.session['name'] if 'name' in request.session else None
+    tid = request.session['tid'] if 'tid' in request.session else None  
+    return render(request, 'teachers/landing.html', {'name':name, 'tid': tid})
 
 
 def signout(request):

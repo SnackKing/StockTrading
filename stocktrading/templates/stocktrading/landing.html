@@ -11,11 +11,16 @@
     <div class = "pl-5">
       <p class="lead">TradeTester lets you buy and sell stocks in a simulated environment.</p>
       <p class="lead">No ads, no limits, no risks.</p>
-      <p class="lead mb-0">Sign up or log in to get started.</p>
-      <a href="{% url 'stocktrading-signup' %}" class="btn btn-info bg-green mt-3 pl-2 pr-2 btn-md" role="button">Sign Up</a>
-      <a href="{% url 'stocktrading-login' %}" class="btn btn-info bg-green mt-3 ml-3 pl-2 pr-2 rowButton" role="button">Log In</a>
-      <p class = "lead mt-5">Are you an Educator? </p>
-      <a href="{% url 'teachers-landing' %}" class="btn btn-info bg-green mt-3 pl-2 pr-2 " role="button">TradeTester for Teachers</a>
+      {% if not uid %}
+        <p class="lead mb-0">Sign up or log in to get started.</p>
+        <a href="{% url 'stocktrading-signup' %}" class="btn btn-info bg-green mt-3 pl-2 pr-2 btn-md" role="button">Sign Up</a>
+        <a href="{% url 'stocktrading-login' %}" class="btn btn-info bg-green mt-3 ml-3 pl-2 pr-2 rowButton" role="button">Log In</a>
+        <p class = "lead mt-5">Are you an Educator? </p>
+        <a href="{% url 'teachers-landing' %}" class="btn btn-info bg-green mt-3 pl-2 pr-2 " role="button">TradeTester for Teachers</a>
+      {% else %}
+        <p class="lead mb-0 mt-3 pt-3">You are already logged in.</p>
+        <a href="{% url 'stocktrading-home' %}" class="btn btn-info bg-green mt-3 pl-2 pr-2" role="button">Home</a>
+      {% endif %}
 
     </div>
   </div>

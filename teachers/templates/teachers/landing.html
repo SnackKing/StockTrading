@@ -11,11 +11,17 @@
     <div class = "pl-5">
       <p class="lead">TradeTester for Teachers helps you keep track of all of your students using TradeTester.</p>
       <p class="lead">Still no ads, no limits, no risks.</p>
+      {% if not tid %}
       <p class="lead mb-0">Sign up or log in to get started.</p>
       <a href="{% url 'teachers-signup' %}" class="btn btn-info bg-green mt-3 pl-2 pr-2 btn-md" role="button">Sign Up</a>
       <a href="{% url 'teachers-login' %}" class="btn btn-info bg-green mt-3 ml-3 pl-2 pr-2 rowButton" role="button">Log In</a>
       <p class = "lead mt-5">Just want to play? </p>
       <a href="{% url 'stocktrading-landing' %}" class="btn btn-info bg-green mt-3 pl-2 pr-2 mb-2" role="button">Back to TradeTester</a>
+      {% else %}
+        <p class="lead mb-0 mt-3 pt-3">You are already logged in.</p>
+        <a href="{% url 'teachers-dashboard' %}" class="btn btn-info bg-green mt-3 pl-2 pr-2" role="button">Dashboard</a>
+      {% endif %}
+      
 
     </div>
   </div>
