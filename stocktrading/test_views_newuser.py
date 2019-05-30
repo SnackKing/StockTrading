@@ -14,37 +14,65 @@ config = {
     "serviceAccount": "creds.json"
 }
 
-class ViewTest(TestCase):
+class HomeTest(TestCase):
     def setUp(self):
         self.client = Client()
         session = self.client.session
         session['uid'] = 'TAHqMTTsPEQTpxlZfR8ApRdKxXu1'
         session['name'] = 'BlankUser'
         session.save()
+        url = reverse('stocktrading-home')
+        # Create an instance of a GET request.
+        self.response = self.client.get(url)
     
 
     def test_home(self):
-        url = reverse('stocktrading-home')
-        # Create an instance of a GET request.
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.response.status_code, 200)
 
     def test_home_name(self):
-        url = reverse('stocktrading-home')
-        # Create an instance of a GET request.
-        response = self.client.get(url)
-        self.assertEqual(response.context['name'], 'BlankUser')
+        self.assertEqual(self.response.context['name'], 'BlankUser')
 
     def test_home_watched_empty(self):
-        url = reverse('stocktrading-home')
-        # Create an instance of a GET request.
-        response = self.client.get(url)
-        self.assertEqual(len(response.context['watched']), 0)
+        self.assertEqual(len(self.response.context['watched']), 0)
 
     def test_home_owned_empty(self):
-        url = reverse('stocktrading-home')
-        # Create an instance of a GET request.
-        response = self.client.get(url)
-        self.assertEqual(len(response.context['owned']), 0)
+        self.assertEqual(len(self.response.context['owned']), 0)
+
+class StockTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        session = self.client.session
+        session['uid'] = 'TAHqMTTsPEQTpxlZfR8ApRdKxXu1'
+        session['name'] = 'BlankUser'
+        session.save()
+        url = reverse('stocktrading-stock', kwargs={'symbol':"MSFT"})
+        self.response = self.client.get(url)
+    def test_stock(self):
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_stock_watched(self):
+        user = self.response.context['user']
+        self.assertEqual('added' in user, False)
+
+    def test_stock_newsData(self):
+        self.assertEqual(len(self.response.context['newsData']), 5)
+
+    def test_stock_isOwned(self):
+        self.assertEqual(self.response.context['owned'], False)
+
+    def test_stock_priceDataExists(self):
+        self.assertEqual(len(self.response.context['points']), 4)
+
+    def test_stock_labelsExist(self):
+        self.assertEqual(len(self.response.context['dayLabels']), 4)
+
+    def test_stock_numShares(self):
+        self.assertEqual(self.response.context['numShares'],0)
+
+    def test_stock_equity(self):
+        numShares = self.response.context['numShares']
+        price = self.response.context['stock']['price']
+        actualEquity = round(int(numShares)*float(price),2)
+        self.assertEqual(self.response.context['equity'],actualEquity)
 
 
