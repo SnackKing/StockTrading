@@ -15,29 +15,29 @@ class TestLoginForm(TestCase):
         self.assertFalse(form.errors)
 
     def testLoginInvalidEmail(self):
-        valid_data = {
+        invalid_data = {
         'email': 'doggo',
         'password': 'password'
         }
-        form = LoginForm(data = valid_data)
+        form = LoginForm(data = invalid_data)
         form.is_valid()
         self.assertTrue(form.errors)
 
     def testLoginBlankEmail(self):
-        valid_data = {
+        invalid_data = {
         'email': '',
         'password': 'password'
         }
-        form = LoginForm(data = valid_data)
+        form = LoginForm(data = invalid_data)
         form.is_valid()
         self.assertTrue(form.errors)
 
     def testLoginBlankPassword(self):
-        valid_data = {
+        invalid_data = {
         'email': 'testemail@test.org',
         'password': ''
         }
-        form = LoginForm(data = valid_data)
+        form = LoginForm(data = invalid_data)
         form.is_valid()
         self.assertTrue(form.errors)
 

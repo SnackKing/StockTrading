@@ -14,6 +14,30 @@ config = {
     "serviceAccount": "creds.json"
 }
 
+class LoginTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        session = self.client.session
+        session['uid'] = 'rIcUltfYiDNB6lMqdHn2ymdytIN2'
+        session['name'] = 'TestUser'
+        session.save()
+
+    def testLoginValid(self):
+        url = reverse('stocktrading-login')
+        data = {'email': 'allegrettidev@gmail.com', 'password': 'password'}
+        # Create an instance of a POST request.
+        self.response = self.client.post(url, data)
+        self.assertRedirects(self.response, reverse('stocktrading-home'), status_code=302, target_status_code=200, msg_prefix='', fetch_redirect_response=True)
+
+    def testLoginInvalid(self):
+        url = reverse('stocktrading-login')
+        data = {'email': 'notarealemail@gmail.com', 'password': 'password'}
+        # Create an instance of a POST request.
+        self.response = self.client.post(url, data)
+        self.assertRedirects(self.response, reverse('stocktrading-login'), status_code=302, target_status_code=200, msg_prefix='', fetch_redirect_response=True)
+
+  
+
 class HomeTest(TestCase):
     def setUp(self):
         self.client = Client()
