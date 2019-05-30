@@ -168,7 +168,7 @@ def signup(request):
             request.session['uid'] = userId
             request.session['name'] = username
             #get class info if join code used
-            if not code == None:
+            if not code == "":
                 tid = db.child('codes_tid').child(code).get().val();
                 print(tid);
                 if not tid == None:

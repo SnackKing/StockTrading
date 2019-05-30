@@ -18,8 +18,8 @@ class ViewTest(TestCase):
     def setUp(self):
         self.client = Client()
         session = self.client.session
-        session['uid'] = 'rIcUltfYiDNB6lMqdHn2ymdytIN2'
-        session['name'] = 'TestUser'
+        session['uid'] = 'TAHqMTTsPEQTpxlZfR8ApRdKxXu1'
+        session['name'] = 'BlankUser'
         session.save()
     
 
@@ -33,35 +33,18 @@ class ViewTest(TestCase):
         url = reverse('stocktrading-home')
         # Create an instance of a GET request.
         response = self.client.get(url)
-        self.assertEqual(response.context['name'], 'TestUser')
+        self.assertEqual(response.context['name'], 'BlankUser')
 
-    def test_home_owned(self):
+    def test_home_watched_empty(self):
         url = reverse('stocktrading-home')
         # Create an instance of a GET request.
         response = self.client.get(url)
-        self.assertEqual(len(response.context['owned']), 2)
+        self.assertEqual(len(response.context['watched']), 0)
 
-    def test_home_watched(self):
+    def test_home_owned_empty(self):
         url = reverse('stocktrading-home')
         # Create an instance of a GET request.
         response = self.client.get(url)
-        self.assertEqual(len(response.context['watched']), 4)
-
-    def test_stock(self):
-        url = reverse('stocktrading-stock', kwargs={'symbol':"MSFT"})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-
-    def test_stock_watched(self):
-        url = reverse('stocktrading-stock', kwargs={'symbol':"MSFT"})
-        response = self.client.get(url)
-        user = response.context['user']
-        self.assertEqual('MSFT' in user['added'], True)
-
-    def test_stock_notwatched(self):
-        url = reverse('stocktrading-stock', kwargs={'symbol':"COKE"})
-        response = self.client.get(url)
-        user = response.context['user']
-        self.assertEqual('COKE' in user['added'], False)
+        self.assertEqual(len(response.context['owned']), 0)
 
 
