@@ -39,6 +39,35 @@ class LoginTest(TestCase):
         self.assertRedirects(self.response, reverse('stocktrading-login'), status_code=302, target_status_code=200, msg_prefix='', fetch_redirect_response=True)
 
   
+class SignOutTest(TestCase):
+    def testSignOutValid(self):
+        self.client = Client()
+        url = reverse('stocktrading-login')
+        data = {'email': 'allegrettidev@gmail.com', 'password': 'password'}
+        session = self.client.session
+        session['uid'] = 'rIcUltfYiDNB6lMqdHn2ymdytIN2'
+        session['name'] = 'TestUser'
+        session.save()
+        self.response = self.client.post(url, data)
+        logoutUrl = reverse('stocktrading-signout')
+        self.response = self.client.get(logoutUrl)
+        self.assertRedirects(self.response, reverse('stocktrading-landing'), status_code=302, target_status_code=200, msg_prefix='', fetch_redirect_response=True)
+        self.assertFalse('name' in self.client.session)
+        self.assertFalse('uid' in self.client.session)
+
+
+    def testSignoutInvalid(self):
+        logoutUrl = reverse('stocktrading-signout')
+        self.response = self.client.get(logoutUrl)
+        self.assertRedirects(self.response, reverse('stocktrading-landing'), status_code=302, target_status_code=200, msg_prefix='', fetch_redirect_response=True)
+        self.assertFalse('name' in self.client.session)
+        self.assertFalse('uid' in self.client.session)
+
+
+
+
+
+
 
 class HomeTest(TestCase):
     def setUp(self):

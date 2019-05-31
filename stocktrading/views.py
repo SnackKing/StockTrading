@@ -476,8 +476,11 @@ def transactions(request):
     return render(request, 'stocktrading/transactions.html', {'transactions': transactions, 'user': user, 'name':request.session['name']})
 
 def signout(request):
-    del request.session['uid']
-    del request.session['name']
+    try:
+        del request.session['uid']
+        del request.session['name']
+    except:
+        pass
     return redirect("stocktrading-landing")
 
 def newpassword(request):
