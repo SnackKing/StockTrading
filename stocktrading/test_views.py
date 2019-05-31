@@ -13,6 +13,8 @@ config = {
     "storageBucket": "stocktrader-239615.appspot.com",
     "serviceAccount": "creds.json"
 }
+firebase = pyrebase.initialize_app(config)
+db = firebase.database()
 
 class LoginTest(TestCase):
     def setUp(self):
@@ -101,6 +103,34 @@ class StockTest(TestCase):
         price = self.response.context['stock']['price']
         actualEquity = round(int(numShares)*float(price),2)
         self.assertEqual(self.response.context['equity'],actualEquity)
+
+class AddStockTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        session = self.client.session
+        session['uid'] = 'rIcUltfYiDNB6lMqdHn2ymdytIN2'
+        session['name'] = 'TestUser'
+        session.save()
+
+    def test_add(self):
+        url = reverse('add-remove-stock')
+        data = {'value':'Watch', 'symbol':'TSLA'}
+        self.response = self.client.post(url,data)
+        added = db.child('users').child('rIcUltfYiDNB6lMqdHn2ymdytIN2').child('added').get().val()
+        self.assertTrue('TSLA' in added)
+
+    def test_remove(self):
+        url = reverse('add-remove-stock')
+        data = {'value':'Stop Watching', 'symbol':'MSFT'}
+        self.response = self.client.post(url,data)
+        added = db.child('users').child('rIcUltfYiDNB6lMqdHn2ymdytIN2').child('added').get().val()
+        self.assertFalse('MSFT' in added)
+
+    @classmethod
+    def tearDownClass(self):
+        db.child('users').child('rIcUltfYiDNB6lMqdHn2ymdytIN2').child('added').child('TSLA').remove()
+        db.child("users").child('rIcUltfYiDNB6lMqdHn2ymdytIN2').child("added").update({'MSFT': "doggo"})
+
 
 
 
