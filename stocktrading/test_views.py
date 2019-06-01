@@ -237,6 +237,9 @@ class SellStockTest(TestCase):
 		newBalance = int(updatedUser['balance'])
 		self.assertEqual(prevBalance + (int(data['count']) * float(data['price'])), newBalance)
 
+	def tearDown(self):
+		db.child('users').child('rIcUltfYiDNB6lMqdHn2ymdytIN2').set(self.user)
+
 
 
 

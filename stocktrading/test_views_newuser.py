@@ -13,6 +13,8 @@ config = {
     "storageBucket": "stocktrader-239615.appspot.com",
     "serviceAccount": "creds.json"
 }
+firebase = pyrebase.initialize_app(config)
+db = firebase.database()
 
 class HomeTest(TestCase):
     def setUp(self):
@@ -74,5 +76,80 @@ class StockTest(TestCase):
         price = self.response.context['stock']['price']
         actualEquity = round(int(numShares)*float(price),2)
         self.assertEqual(self.response.context['equity'],actualEquity)
+
+class AddStockTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        session = self.client.session
+        session['uid'] = 'TAHqMTTsPEQTpxlZfR8ApRdKxXu1'
+        session['name'] = 'BlankUser'
+        session.save()
+
+    def test_add(self):
+        url = reverse('add-remove-stock')
+        data = {'value':'Watch', 'symbol':'TSLA'}
+        self.response = self.client.post(url,data)
+        added = db.child('users').child('TAHqMTTsPEQTpxlZfR8ApRdKxXu1').child('added').get().val()
+        self.assertTrue('TSLA' in added)
+
+    def test_remove(self):
+        url = reverse('add-remove-stock')
+        data = {'value':'Stop Watching', 'symbol':'MSFT'}
+        self.response = self.client.post(url,data)
+        added = db.child('users').child('TAHqMTTsPEQTpxlZfR8ApRdKxXu1').child('added').get().val()
+        self.assertFalse('MSFT' in added)
+
+    @classmethod
+    def tearDownClass(self):
+        db.child('users').child('TAHqMTTsPEQTpxlZfR8ApRdKxXu1').child('added').remove()
+
+class TransactionsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        session = self.client.session
+        session['uid'] = 'TAHqMTTsPEQTpxlZfR8ApRdKxXu1'
+        session['name'] = 'BlankUser'
+        session.save()
+        url = reverse('stocktrading-transactions')
+        self.response = self.client.get(url)
+ 
+    def test_getbuys(self):
+        self.assertFalse('buys' in self.response.context['transactions'])
+
+    def test_getsells(self):
+        self.assertFalse('sells' in self.response.context['transactions'])
+
+class BuyStockTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        session = self.client.session
+        session['uid'] = 'TAHqMTTsPEQTpxlZfR8ApRdKxXu1'
+        session['name'] = 'TestUser'
+        session.save()
+        self.user = db.child('users').child('TAHqMTTsPEQTpxlZfR8ApRdKxXu1').get().val()
+
+    
+    def test_buyNotOwned(self):
+        prevBalance = int(self.user['balance'])
+        data = {'price':5,'count':1}
+        url = reverse('stocktrading-stock-buy', kwargs={'symbol':"VKTX"})
+        self.response = self.client.post(url,data)
+        updatedUser = db.child('users').child('TAHqMTTsPEQTpxlZfR8ApRdKxXu1').get().val()
+        newBalance = int(updatedUser['balance'])
+        self.assertEqual(prevBalance - (int(data['count']) * float(data['price'])), newBalance)
+
+    def test_buyOwned(self):
+        prevBalance = int(self.user['balance'])
+        data = {'price':10,'count':2}
+        url = reverse('stocktrading-stock-buy', kwargs={'symbol':"MSFT"})
+        self.response = self.client.post(url,data)
+        updatedUser = db.child('users').child('TAHqMTTsPEQTpxlZfR8ApRdKxXu1').get().val()
+        newBalance = int(updatedUser['balance'])
+        self.assertEqual(prevBalance - (int(data['count']) * float(data['price'])), newBalance)
+
+
+    def tearDown(self):
+        db.child('users').child('TAHqMTTsPEQTpxlZfR8ApRdKxXu1').set(self.user)
+
 
 
