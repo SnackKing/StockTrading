@@ -160,6 +160,64 @@ class AddStockTest(TestCase):
         db.child('users').child('rIcUltfYiDNB6lMqdHn2ymdytIN2').child('added').child('TSLA').remove()
         db.child("users").child('rIcUltfYiDNB6lMqdHn2ymdytIN2').child("added").update({'MSFT': "doggo"})
 
+class TransactionsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        session = self.client.session
+        session['uid'] = 'rIcUltfYiDNB6lMqdHn2ymdytIN2'
+        session['name'] = 'TestUser'
+        session.save()
+        url = reverse('stocktrading-transactions')
+        self.response = self.client.get(url)
+        self.trans = db.child('users').child('rIcUltfYiDNB6lMqdHn2ymdytIN2').child('orders').get().val()
+ 
+    def test_getbuys(self):
+        self.assertEqual(self.trans['buy'], self.response.context['transactions']['buys'])
+
+    def test_getsells(self):
+        self.assertEqual(self.trans['sell'], self.response.context['transactions']['sells'])
+
+class BuyStockTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        session = self.client.session
+        session['uid'] = 'rIcUltfYiDNB6lMqdHn2ymdytIN2'
+        session['name'] = 'TestUser'
+        session.save()
+        self.user = db.child('users').child('rIcUltfYiDNB6lMqdHn2ymdytIN2').get().val()
+
+    
+    def test_buyNotOwned(self):
+        prevBalance = int(self.user['balance'])
+        data = {'price':5,'count':1}
+        url = reverse('stocktrading-stock-buy', kwargs={'symbol':"VKTX"})
+        self.response = self.client.post(url,data)
+        updatedUser = db.child('users').child('rIcUltfYiDNB6lMqdHn2ymdytIN2').get().val()
+        newBalance = int(updatedUser['balance'])
+        self.assertEqual(prevBalance - (int(data['count']) * float(data['price'])), newBalance)
+
+    def test_buyOwned(self):
+        prevBalance = int(self.user['balance'])
+        data = {'price':10,'count':2}
+        url = reverse('stocktrading-stock-buy', kwargs={'symbol':"MSFT"})
+        self.response = self.client.post(url,data)
+        updatedUser = db.child('users').child('rIcUltfYiDNB6lMqdHn2ymdytIN2').get().val()
+        newBalance = int(updatedUser['balance'])
+        self.assertEqual(prevBalance - (int(data['count']) * float(data['price'])), newBalance)
+
+
+    def tearDown(self):
+        db.child('users').child('rIcUltfYiDNB6lMqdHn2ymdytIN2').set(self.user)
+
+
+
+
+
+      
+
+
+
+
 
 
 
