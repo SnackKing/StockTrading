@@ -23,7 +23,7 @@ class LandingTest(TestCase):
 		self.session.save()
 
 	def test_landing_loggedin(self):
-		url = reverse('stocktrading-login')
+		url = reverse('stocktrading-landing')
 		self.session['uid'] = 'rIcUltfYiDNB6lMqdHn2ymdytIN2'
 		self.session['name'] = 'TestUser'
 		self.session.save()
@@ -31,7 +31,7 @@ class LandingTest(TestCase):
 		self.assertEqual(response.status_code, 200)
 
 	def test_landing_notloggedin(self):
-		url = reverse('stocktrading-login')
+		url = reverse('stocktrading-landing')
 		response = self.client.get(url)
 		self.assertEqual(response.status_code, 200)
 

@@ -44,7 +44,7 @@ class SignupForm(forms.Form):
         )
     )
     code = forms.CharField(
-        label = 'Join Code',
+        label = 'Invite Code',
         max_length = 10,
         required = True,
         widget = forms.TextInput(
