@@ -16,6 +16,27 @@ config = {
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
+class LandingTest(TestCase):
+	def setUp(self):
+		self.client = Client()
+		self.session = self.client.session
+		self.session.save()
+
+	def test_landing_loggedin(self):
+		url = reverse('stocktrading-login')
+		self.session['uid'] = 'rIcUltfYiDNB6lMqdHn2ymdytIN2'
+		self.session['name'] = 'TestUser'
+		self.session.save()
+		response = self.client.get(url)
+		self.assertEqual(response.status_code, 200)
+
+	def test_landing_notloggedin(self):
+		url = reverse('stocktrading-login')
+		response = self.client.get(url)
+		self.assertEqual(response.status_code, 200)
+
+
+
 class LoginTest(TestCase):
 	def setUp(self):
 		self.client = Client()
