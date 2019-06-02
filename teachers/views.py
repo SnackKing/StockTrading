@@ -154,10 +154,10 @@ def studentList(request, joinCode):
 
 
 def removeStudent(request, joinCode, studentId):
+    if 'tid' not in request.session:
+        return redirect('teachers-login')
     tid = request.session['tid']
-    db.child('teachers').child(tid).child('classes').child(
-        joinCode).child('students').child(studentId).remove()
-    print('Deleted')
+    db.child('teachers').child(tid).child('classes').child(joinCode).child('students').child(studentId).remove()
     return redirect('teachers-class', joinCode=joinCode)
 
 
