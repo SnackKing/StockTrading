@@ -265,7 +265,7 @@ def stocks(request, symbol):
     return render(request, 'stocktrading/stock.html', context)
 
 def getNewsData(symbol):
-    parameters = {"token": "3rnk49qveukvizaifh0bykco6o3ogpfiiamqimvy", "tickers": symbol,'type':'article', 'items':"5", 'fallback':"true"}
+    parameters = {"token": "3rnk49qveukvizaifh0bykco6o3ogpfiiamqimvy", "tickers": symbol,'type':'article', 'items':"5"}
     response = requests.get("https://stocknewsapi.com/api/v1", params=parameters)
     newsResult = json.loads(response.content.decode('utf-8'))
     newsData = newsResult['data'];
