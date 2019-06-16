@@ -424,6 +424,7 @@ def account(request):
        # topStocks = OrderedDict(sorted(trans.items(), key = lambda t: t[1], reverse = True))
         topStocks = dict(collections.Counter(trans).most_common(5))
     equities = getOwnedEquity(user) if "owned" in user else {}
+    user['balance'] = round(user['balance'],2)
     totalValue = round(sumAllAssets(user,equities),2)
     return render(request, 'stocktrading/account.html', {'user': user,'name': request.session['name'], 'favs': topStocks, 'equities': equities, 'total': totalValue})
 
@@ -438,12 +439,12 @@ def getOwnedEquity(user):
     parameters = {
         "token": 'sk_0a0d416a40b6401a87b46811783be7be', "symbols": stocks}
     response = requests.get(
-        "https://cloud.iexapis.com/stable/tops", params=parameters)
+        "https://cloud.iexapis.com/stable/tops/last", params=parameters)
     result = json.loads(response.content.decode('utf-8'))
     equitys = {}
     print(result)
     for item in result:
-        equitys[item['symbol']] = round(float(item['lastSalePrice']) * int(user['owned'][item['symbol']]),2)
+        equitys[item['symbol']] = round(float(item['price']) * int(user['owned'][item['symbol']]),2)
     return equitys
 
 def sumAllAssets(user, equitys):
