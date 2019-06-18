@@ -45,6 +45,7 @@ def home(request):
     #get user
     uid = request.session['uid']
     user = db.child('users').child(uid).get().val();
+    user['balance'] = round(float(user['balance']),2)
 
     #search bar query, redirect to stock page with given symbol
     if(request.method == 'GET'):
