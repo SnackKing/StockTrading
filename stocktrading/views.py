@@ -114,6 +114,8 @@ def getWatchedStocks(data, user):
     return watched
 
 def about(request):
+    if 'uid' not in request.session:
+        return redirect('stocktrading-login')
     return render(request, 'stocktrading/about.html', {'name': request.session['name']})
 
 
