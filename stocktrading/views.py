@@ -266,11 +266,10 @@ def stocks(request, symbol):
     return render(request, 'stocktrading/stock.html', context)
 
 def getNewsData(symbol):
-    parameters = {"token": "3rnk49qveukvizaifh0bykco6o3ogpfiiamqimvy", "tickers": symbol,'type':'article', 'items':"5"}
+    parameters = {"token": randomNewsKey(), "tickers": symbol,'type':'article', 'items':"5"}
     response = requests.get("https://stocknewsapi.com/api/v1", params=parameters)
     newsResult = json.loads(response.content.decode('utf-8'))
-    newsData = newsResult['data'];
-    print(type(newsData))
+    newsData = newsResult['data']
     return newsData
 
 
@@ -512,6 +511,9 @@ def randomKey():
         return "o3yCTA0mVXrkep8zrRwmL2vt6kPJ8KPgZdbF6D8whZNDRkGqAteM3TewEAsK"
     else:
         return "mkUwgwc7TADeShHuZO7D2RRbeLu1b9PNd6Ptey0LkIeRliCUjdLJJB9UE4UX"
+
+def randomNewsKey():
+    return "4zg0dsdp2p6hicwzl5yhfmfach97qtz7dmrymg2x"
 
 def isMarketOpen():
   dayOfWeek = datetime.today().weekday()
