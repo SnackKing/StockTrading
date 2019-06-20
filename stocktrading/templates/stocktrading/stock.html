@@ -153,27 +153,31 @@ var myChart = new Chart(ctx, {
               <p><span class = "font-weight-bold">Total Return: </span> {{totalReturn}} </p>
            </div>
 </article>
-<h3>News about {{stock.symbol}}</h3>
-<hr>
-{% for article in newsData %}
-<article class="content-section articleDesktop">
-          <img class = "imageLeft" src = "{{article.image_url}}">
-           <div class="media-body newsArticle">
-              <div class="article-metadata">
-                 <p class="mr-2"><a href = "{{article.news_url}}">{{article.title}}</a></p>
-              </div>
-              <p>{{article.text}}</p>
-              <p>
-                {% for tag in article.tags %}
-                  <span class = "articleTag">{{tag}}</span>
-                {% endfor %}
-                <span class = "text-muted"> {{article.source_name}} | {{article.date}} | <span class = "article-{{article.sentiment}}">{{article.sentiment}}</span></span>
-               </p>
-                
-           </div>
-</article>
-{% endfor %}
-<p clas = "text-muted" style="text-align: center;"> Powered by StockNewsAPI</p> 
+{% if newsData.message %}
+  <h5>There was a problem getting news for this symbol</h5>
+{% else %}
+    <h3>News about {{stock.symbol}}</h3>
+    <hr>
+    {% for article in newsData %}
+    <article class="content-section articleDesktop">
+              <img class = "imageLeft" src = "{{article.image_url}}">
+               <div class="media-body newsArticle">
+                  <div class="article-metadata">
+                     <p class="mr-2"><a href = "{{article.news_url}}">{{article.title}}</a></p>
+                  </div>
+                  <p>{{article.text}}</p>
+                  <p>
+                    {% for tag in article.tags %}
+                      <span class = "articleTag">{{tag}}</span>
+                    {% endfor %}
+                    <span class = "text-muted"> {{article.source_name}} | {{article.date}} | <span class = "article-{{article.sentiment}}">{{article.sentiment}}</span></span>
+                   </p>
+                    
+               </div>
+    </article>
+    {% endfor %}
+    <p class = "text-muted" style="text-align: center;"> Powered by StockNewsAPI</p> 
+{%endif%}
 
 <script>
 $('#like').click(function(){

@@ -262,8 +262,14 @@ def stocks(request, symbol):
         numTrans = user['stats']['transCount'][symbol]
         totalreturn = round(float(user['stats']['totalreturn'][symbol]) + (float(data['price'])*int(numShares)),2)
     except KeyError:
+    
         pass
-    newsData = getNewsData(symbol)
+    newsData = {}
+    try:
+        newsData = getNewsData(symbol)
+    except:
+        newsData["message"] = "There was a problem getting news data"
+
     context = {'symbol': symbol, 'stock': data, 'points': priceList, 'dayLabels': dayList, 'user': user,'name':request.session['name'], 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn, 'newsData':newsData, 'isOpen':isMarketOpen()}
     return render(request, 'stocktrading/stock.html', context)
 
