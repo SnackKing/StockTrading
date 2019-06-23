@@ -22,15 +22,29 @@
 <div class = "table-responsive">
 <canvas id="myChart" style="min-height: 500px"></canvas>
 </div>
+<div class="btn-group ml-2 mt-2 mb-2" role="group" aria-label="Time">
+  <button type="button" class="btn btn-secondary buttonPanel" id = "week">Week</button>
+  <button type="button" class="btn btn-secondary buttonPanel" id = "month">Month</button>
+  <button type="button" class="btn btn-secondary buttonPanel" id = "year">Year</button>
+</div>
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');
+var weekData = [{% for i in weekPrices %}{{ i }},{% endfor %}]
+var weekLabels =  [{% for i in weekLabels %}'{{ i }}',{% endfor %}]
+
+var yearData = [{% for i in yearPrices %}{{ i }},{% endfor %}]
+var yearLabels =  [{% for i in yearLabels %}'{{ i }}',{% endfor %}]
+
+var monthData = [{% for i in monthPrices %}{{ i }},{% endfor %}]
+var monthLabels =  [{% for i in monthLabels %}'{{ i }}',{% endfor %}]
+
 var myChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels:  [{% for i in dayLabels %}'{{ i }}',{% endfor %}],
+        labels:  weekLabels,
         datasets: [{
             label: 'Price',
-            data: [{% for i in points %}{{ i }},{% endfor %}],
+            data: weekData,
             backgroundColor: 'rgb(95,120,138,0.1)',
             borderColor: 'rgba(95,120,138,0.8)',
             borderWidth: 1
@@ -40,6 +54,12 @@ var myChart = new Chart(ctx, {
       responsive:true,
       maintainAspectRatio:false,
         scales: {
+            xAxes: [{
+                ticks: {
+                  autoSkip: true,
+                  maxTicksLimit: 20
+                }
+            }],
             yAxes: [{
                 ticks: {
                     beginAtZero: false
@@ -73,7 +93,29 @@ var myChart = new Chart(ctx, {
     }
 
 });
+$("#week").click(function (){
+  console.log("week")
+  var data = myChart.config.data;
+    data.datasets[0].data = weekData;
+    data.labels = weekLabels;
+    myChart.update();
+});
+$("#month").click(function (){
+  console.log("month")
+  var data = myChart.config.data;
+    data.datasets[0].data = monthData;
+    data.labels = monthLabels;
+    myChart.update();
+});
+$("#year").click(function (){
+  console.log("year")
+  var data = myChart.config.data;
+    data.datasets[0].data = yearData;
+    data.labels = yearLabels;
+    myChart.update();
+});
 </script>
+
 
 {% if isOpen %}
     <h6> Your balance: ${{user.balance}} </h3>

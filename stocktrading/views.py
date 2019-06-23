@@ -219,7 +219,7 @@ def stocks(request, symbol):
 
     #create date object for today and 1 week ago for API call
     today = datetime.today().strftime('%Y-%m-%d')
-    earlier = datetime.today() - timedelta(days=7)
+    earlier = datetime.today() - timedelta(days=365)
     earlier = earlier.strftime('%Y-%m-%d')
 
     #make api call for historical price data for stock
@@ -231,11 +231,17 @@ def stocks(request, symbol):
     filtered = historyResult['history']
 
     #parse results into labels and points for chart.js
-    priceList = []
-    dayList = []
+    yearPrices = []
+    yearLabels = []
     for day, stats in filtered.items():
-        priceList.append(stats['close'])
-        dayList.append(day)
+        yearPrices.append(stats['close'])
+        yearLabels.append(day)
+    monthPrices = yearPrices[-30:] if len(yearPrices) >= 30 else yearPrices
+    weekPrices = yearPrices[-7:] if len(yearPrices) >= 7 else yearPrices
+
+    monthLabels = yearLabels[-30:] if len(yearLabels) >= 30 else yearLabels
+    weekLabels = yearLabels[-7:] if len(yearLabels) >= 7 else yearLabels
+
 
     user = db.child("users").child(uid).get().val();
 
@@ -270,7 +276,7 @@ def stocks(request, symbol):
     except:
         newsData["message"] = "There was a problem getting news data"
 
-    context = {'symbol': symbol, 'stock': data, 'points': priceList, 'dayLabels': dayList, 'user': user,'name':request.session['name'], 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn, 'newsData':newsData, 'isOpen':isMarketOpen()}
+    context = {'symbol': symbol, 'stock': data, 'weekPrices': weekPrices, 'weekLabels': weekLabels,'monthPrices':monthPrices, 'monthLabels':monthLabels, 'yearPrices':yearPrices, 'yearLabels':yearLabels, 'user': user,'name':request.session['name'], 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn, 'newsData':newsData, 'isOpen':isMarketOpen()}
     return render(request, 'stocktrading/stock.html', context)
 
 def getNewsData(symbol):

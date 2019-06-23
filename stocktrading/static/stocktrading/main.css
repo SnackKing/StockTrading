@@ -164,6 +164,9 @@ a.article-title:hover {
   align-items: flex-start;
   margin-left: 10px;
 }
+.buttonPanel{
+  background-color: #85bb65;
+}
 @media all and (max-width:500px){
     .imageLeft, .newsArticle{
         float:none;

@@ -45,7 +45,9 @@ a{
 p {
 	color: lightgrey;
 }
-
+.buttonPanel{
+  background-color: #4F4E4E !important;
+}
 .uptrend{
  color:green !important;
 }
