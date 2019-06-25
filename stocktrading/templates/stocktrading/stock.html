@@ -34,8 +34,8 @@
   <button type="button" class="btn btn-secondary buttonPanel" id = "month">Month</button>
   <button type="button" class="btn btn-secondary buttonPanel" id = "year">Year</button>
   <div class = "ml-5">
-    <button type="button" class="btn btn-secondary buttonPanel" id = "line">Line</button>
-    <button type="button" class="btn btn-secondary buttonPanel" id = "candlestick">Candlestick</button>
+    <button type="button" class="btn btn-secondary buttonPanel" id = "line"><i class="fas fa-chart-line"></i>  Line</button>
+    <button type="button" class="btn btn-secondary buttonPanel" id = "candlestick"><i class="fas fa-chart-bar"></i>  Candlestick</button>
   </div>
 </div>
 <script>
@@ -77,8 +77,7 @@ for(i = 249; i >= 0;i--){
   currentTime = currentTime.minus({days:1})
 }
 yearDataCandle = trimmedYearData
-console.log(yearDataCandle)
-console.log(weekDataCandle)
+
 var weekData = weekDataLine
 var monthData = monthDataLine
 var yearData = yearDataLine
