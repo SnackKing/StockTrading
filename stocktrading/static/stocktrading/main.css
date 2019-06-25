@@ -164,6 +164,18 @@ a.article-title:hover {
   align-items: flex-start;
   margin-left: 10px;
 }
+.hiddenError{
+  background-color: FireBrick; 
+  text-align: center;
+  display: none;
+  visibility: hidden;
+}
+.visibleError{
+  background-color: FireBrick; 
+  text-align: center;
+  color: white;
+  
+}
 .buttonPanel{
   background-color: #85bb65;
 }

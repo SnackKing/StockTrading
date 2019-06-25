@@ -219,6 +219,9 @@ $("#line").click(function (){
 
 
 {% if isOpen %}
+    <div class = "hiddenError p-3 m-4" id = "refreshMessage">
+      <p>5 minutes have passed. To prevent cheating and reduce network usage, please refresh the page to make a transaction</p>
+    </div>
     <h6> Your balance: ${{user.balance}} </h3>
      <div class = 'mt-3 mb-3 col-lg-8 row input-group flexbox'>
             <form  method = "post" class="form-inline" action = "{% url 'stocktrading-stock-buy' symbol=stock.symbol %}">
@@ -248,10 +251,11 @@ $("#line").click(function (){
      <h6> You don't own any shares of {{symbol}} </h3>
     {% endif %}
 {% else %}
-  <div style = "background-color: FireBrick; text-align: center" class="p-2 m-2">
+  <div class="p-2 m-2 visibleError">
     <p>The markets are currently closed.</p>
   </div>
 {% endif %}
+
 <article class="media content-section">
            <div class="media-body">
               <div class="article-metadata">
@@ -323,9 +327,9 @@ $("#line").click(function (){
 {%endif%}
 
 <script>
+var timeout = false
 $('#like').click(function(){
     var val = $(this).val();
-
       $.ajax({
                type: "POST",
                url: '{% url 'add-remove-stock' %}',
@@ -348,8 +352,7 @@ $('#like').click(function(){
     })
 $("#buy").on('input', function() {
    var cost = $(this).val() * {{stock.price}}
-   console.log(cost);
-   if(cost > {{user.balance}} || $(this).val() == "") {
+   if(timeout || cost > {{user.balance}} || $(this).val() == "") {
         document.getElementById("buybtn").disabled = true;
    }
    else{
@@ -359,7 +362,7 @@ $("#buy").on('input', function() {
 });
 $("#sell").on('input', function() {
    var numToSell = $(this).val()
-   if(numToSell > {{numShares}} || $(this).val() == "") {
+   if(timeout || numToSell > {{numShares}} || $(this).val() == "") {
         document.getElementById("sellbtn").disabled = true;
    }
    else{
@@ -367,6 +370,17 @@ $("#sell").on('input', function() {
    }
 
 });
+  {% if isOpen %}
+   setTimeout(
+      function() {
+        timeout = true
+        document.getElementById('refreshMessage').classList.remove('hiddenError')
+        document.getElementById('refreshMessage').classList.add('visibleError')
+        document.getElementById("sellbtn").disabled = true;
+        document.getElementById("buybtn").disabled = true;
+      }, 300000);
+   {% endif %}
+
 </script> 
 </div>
 {% endblock content %}
