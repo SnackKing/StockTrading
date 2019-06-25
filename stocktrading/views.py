@@ -539,6 +539,6 @@ def isMarketOpen():
   dayOfWeek = datetime.today().weekday()
   if dayOfWeek >= 5:
     return False
-  check_time = datetime.now(timezone('EST')).time()
+  check_time = datetime.now(timezone('US/Eastern')).time()
   return check_time >= time(9,30) and check_time <= time(17,0)
 

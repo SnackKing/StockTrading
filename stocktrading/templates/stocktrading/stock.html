@@ -29,14 +29,14 @@
 <div class = "table-responsive">
 <canvas id="myChart" style="min-height: 500px"></canvas>
 </div>
-<div class="btn-group ml-2 mt-2 mb-2" role="group" aria-label="Time">
+<div class="btn-group ml-2 mt-2 mb-2" style = "display:inline-block;line-height: 3em"role="group" aria-label="Time">
   <button type="button" class="btn btn-secondary buttonPanel" id = "week">Week</button>
   <button type="button" class="btn btn-secondary buttonPanel" id = "month">Month</button>
   <button type="button" class="btn btn-secondary buttonPanel" id = "year">Year</button>
-  <div class = "ml-5">
-    <button type="button" class="btn btn-secondary buttonPanel" id = "line"><i class="fas fa-chart-line"></i>  Line</button>
-    <button type="button" class="btn btn-secondary buttonPanel" id = "candlestick"><i class="fas fa-chart-bar"></i>  Candlestick</button>
-  </div>
+  <span class = "ml-4"> 
+  <button type="button" class="btn btn-secondary buttonPanel" id = "line"><i class="fas fa-chart-line"></i>  Line</button>
+  <button type="button" class="btn btn-secondary buttonPanel" id = "candlestick"><i class="fas fa-chart-bar"></i>  Candlestick</button>
+</span>
 </div>
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');
