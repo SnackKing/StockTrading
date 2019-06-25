@@ -81,7 +81,7 @@ yearDataCandle = trimmedYearData
 var weekData = weekDataLine
 var monthData = monthDataLine
 var yearData = yearDataLine
-var chartOptions =  {
+var chartOptionsLine =  {
       responsive:true,
       maintainAspectRatio:false,
         scales: {
@@ -103,7 +103,7 @@ var chartOptions =  {
                     var label = "Price";
 
                     if (label) {
-                        label += ': ';
+                        label += ': $';
                     }
                     label += tooltipItem.yLabel;
                     return label;
@@ -123,7 +123,34 @@ var chartOptions =  {
         }
     }
 
-
+var chartOptionsCandle =  {
+      responsive:true,
+      maintainAspectRatio:false,
+        scales: {
+            xAxes: [{
+                ticks: {
+                  autoSkip: true,
+                  maxTicksLimit: 20
+                }
+            }],
+            yAxes: [{
+                ticks: {
+                    beginAtZero: false
+                }
+            }]
+        },
+        legend: {
+            display: false,
+            labels: {
+                fontColor: 'rgb(255, 99, 132)'
+            }
+        },
+         title: {
+            display: true,
+            text: 'Price History for {{stock.name}}',
+            fontSize: 18
+        }
+    }
 
 var myChart = new Chart(ctx, {
     type: 'line',
@@ -137,7 +164,7 @@ var myChart = new Chart(ctx, {
             borderWidth: 1
         }]
     },
-    options:chartOptions
+    options:chartOptionsLine
 });
 $("#week").click(function (){
   current = "week"
@@ -173,14 +200,13 @@ $("#candlestick").click(function (){
     type: 'candlestick',
     data: {
         datasets: [{
-            label: 'Price',
             data: currentData,
             backgroundColor: 'rgb(95,120,138,0.1)',
             borderColor: 'rgba(95,120,138,0.8)',
             borderWidth: 1
         }]
     },
-    options:chartOptions
+    options:chartOptionsCandle
   })
 });
 $("#line").click(function (){
@@ -212,7 +238,7 @@ $("#line").click(function (){
             borderWidth: 1
         }]
     },
-    options:chartOptions
+    options:chartOptionsLine
   })
 });
 </script>
