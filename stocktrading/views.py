@@ -231,16 +231,22 @@ def stocks(request, symbol):
     filtered = historyResult['history']
 
     #parse results into labels and points for chart.js
-    yearPrices = []
+    yearData = []
     yearLabels = []
     for day, stats in filtered.items():
-        yearPrices.append(stats['close'])
+        currentDay = {'c': stats['close'], 'o': stats['open'], 'h':stats['high'], 'l':stats['low'], 't':day}
+        yearData.append(currentDay)
         yearLabels.append(day)
-    monthPrices = yearPrices[-30:] if len(yearPrices) >= 30 else yearPrices
-    weekPrices = yearPrices[-7:] if len(yearPrices) >= 7 else yearPrices
+    labels = {}
+    historyData = {}
 
-    monthLabels = yearLabels[-30:] if len(yearLabels) >= 30 else yearLabels
-    weekLabels = yearLabels[-7:] if len(yearLabels) >= 7 else yearLabels
+    historyData["year"] = yearData
+    historyData["month"] = yearData[-30:] if len(yearData) >= 30 else yearData
+    historyData["week"] = yearData[-7:] if len(yearData) >= 7 else yearData
+
+    labels['year'] = yearLabels
+    labels['month'] = yearLabels[-30:] if len(yearLabels) >= 30 else yearLabels
+    labels['week'] = yearLabels[-7:] if len(yearLabels) >= 7 else yearLabels
 
 
     user = db.child("users").child(uid).get().val();
@@ -276,7 +282,7 @@ def stocks(request, symbol):
     except:
         newsData["message"] = "There was a problem getting news data"
 
-    context = {'symbol': symbol, 'stock': data, 'weekPrices': weekPrices, 'weekLabels': weekLabels,'monthPrices':monthPrices, 'monthLabels':monthLabels, 'yearPrices':yearPrices, 'yearLabels':yearLabels, 'user': user,'name':request.session['name'], 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn, 'newsData':newsData, 'isOpen':isMarketOpen()}
+    context = {'symbol': symbol, 'stock': data,'labels':labels, 'historyData':historyData , 'user': user,'name':request.session['name'], 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn, 'newsData':newsData, 'isOpen':isMarketOpen()}
     return render(request, 'stocktrading/stock.html', context)
 
 def getNewsData(symbol):

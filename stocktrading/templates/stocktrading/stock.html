@@ -13,7 +13,7 @@
 <div class = "container mt-2">
     <div class = "row mt-2" id = "header">
       <div class = "col-md-10 col-sm-12">
-    	 <h3>{{stock.name}} ({{stock.symbol}})</h3>
+       <h3>{{stock.name}} ({{stock.symbol}})</h3>
       </div>
       <div class="col-md-2 col-sm-12 mt-2 mb-2">
         {% if symbol in user.added %}
@@ -23,9 +23,9 @@
         {% endif %}
       </div>
     </div>
-	<h4>{{stock.price}} {{stock.currency}}</h4>
-	<h6>Today's Change: {{stock.day_change}}</h6>
-	<h6>Change in %: {{stock.change_pct}}</h6>
+  <h4>{{stock.price}} {{stock.currency}}</h4>
+  <h6>Today's Change: {{stock.day_change}}</h6>
+  <h6>Change in %: {{stock.change_pct}}</h6>
 <div class = "table-responsive">
 <canvas id="myChart" style="min-height: 500px"></canvas>
 </div>
@@ -40,15 +40,48 @@
 </div>
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');
-var weekData = [{% for i in weekPrices %}{{ i }},{% endfor %}]
-var weekLabels =  [{% for i in weekLabels %}'{{ i }}',{% endfor %}]
+var current = "week"
+var weekDataLine = [{% for i in historyData.week %}{{ i.c }},{% endfor %}]
+var weekDataCandle = [{% for i in historyData.week %}{o:{{i.o}},c: {{i.c}}, h: {{i.h}}, l: {{i.l}}, t: "{{i.t}}"  },{% endfor %}]
+var weekLabels =  [{% for i in labels.week %}"{{ i }}",{% endfor %}]
 
-var yearData = [{% for i in yearPrices %}{{ i }},{% endfor %}]
-var yearLabels =  [{% for i in yearLabels %}'{{ i }}',{% endfor %}]
+var yearDataLine = [{% for i in historyData.year %}{{ i.c }},{% endfor %}]
+var yearDataCandle = [{% for i in historyData.year %}{o:{{i.o}},c: {{i.c}}, h: {{i.h}}, l: {{i.l}}, t: "{{i.t}}"  },{% endfor %}]
+var yearLabels =  [{% for i in labels.year %}"{{ i }}",{% endfor %}]
 
-var monthData =  [{% for i in monthLabels %}{c:17, o:8, h:20, l:7, t:'{{ i }}'},{% endfor %}]
-var monthLabels =  [{% for i in monthLabels %}'{{ i }}',{% endfor %}]
-console.log(monthData)
+var monthDataLine =  [{% for i in historyData.month %}{{ i.c }},{% endfor %}]
+var monthDataCandle = [{% for i in historyData.month %}{o:{{i.o}},c: {{i.c}}, h: {{i.h}}, l: {{i.l}}, t: "{{i.t}}"  },{% endfor %}]
+var monthLabels =  [{% for i in labels.month %}"{{ i }}",{% endfor %}]
+
+var today = new Date()
+var currentTime = luxon.DateTime.local()
+
+
+for(i = 6; i >= 0;i--){
+  weekDataCandle[i].t = currentTime.valueOf()
+  currentTime = currentTime.minus({days:1})
+}
+
+currentTime = luxon.DateTime.local()
+
+for(i = 29; i >= 0;i--){
+  monthDataCandle[i].t = currentTime.valueOf()
+  currentTime = currentTime.minus({days:1})
+}
+
+currentTime = luxon.DateTime.local()
+trimmedYearData = []
+for(i = 249; i >= 0;i--){
+  yearDataCandle[i].t = currentTime.valueOf()
+  trimmedYearData.unshift(yearDataCandle[i])
+  currentTime = currentTime.minus({days:1})
+}
+yearDataCandle = trimmedYearData
+console.log(yearDataCandle)
+console.log(weekDataCandle)
+var weekData = weekDataLine
+var monthData = monthDataLine
+var yearData = yearDataLine
 var chartOptions =  {
       responsive:true,
       maintainAspectRatio:false,
@@ -94,12 +127,12 @@ var chartOptions =  {
 
 
 var myChart = new Chart(ctx, {
-    type: 'candlestick',
+    type: 'line',
     data: {
-        labels:  monthLabels,
+        labels:  weekLabels,
         datasets: [{
             label: 'Price',
-            data: monthData,
+            data: weekData,
             backgroundColor: 'rgb(95,120,138,0.1)',
             borderColor: 'rgba(95,120,138,0.8)',
             borderWidth: 1
@@ -108,36 +141,41 @@ var myChart = new Chart(ctx, {
     options:chartOptions
 });
 $("#week").click(function (){
-  console.log("week")
+  current = "week"
   var data = myChart.config.data;
     data.datasets[0].data = weekData;
     data.labels = weekLabels;
     myChart.update();
 });
 $("#month").click(function (){
-  console.log("month")
-  var data = myChart.config.data;
+    current = "month"
+    var data = myChart.config.data;
     data.datasets[0].data = monthData;
     data.labels = monthLabels;
     myChart.update();
 });
 $("#year").click(function (){
-  console.log("year")
+  current = "year"
   var data = myChart.config.data;
     data.datasets[0].data = yearData;
     data.labels = yearLabels;
     myChart.update();
 });
 $("#candlestick").click(function (){
-  console.log("candle")
+  weekData = weekDataCandle
+  monthData = monthDataCandle
+  yearData = yearDataCandle
+
+  var currentData = weekDataCandle
+  if(current == "month") currentData = monthDataCandle
+  if(current == "year") currentData = yearDataCandle
   myChart.destroy();
   myChart = new Chart(ctx, {
     type: 'candlestick',
     data: {
-        labels:  monthLabels,
         datasets: [{
             label: 'Price',
-            data: monthDataCandlestick,
+            data: currentData,
             backgroundColor: 'rgb(95,120,138,0.1)',
             borderColor: 'rgba(95,120,138,0.8)',
             borderWidth: 1
@@ -147,15 +185,29 @@ $("#candlestick").click(function (){
   })
 });
 $("#line").click(function (){
-  console.log("line")
+  weekData = weekDataLine
+  monthData = monthDataLine
+  yearData = yearDataLine
+
+  var currentData = weekData
+  var currentLabel = weekLabels
+  if(current == "month"){
+    currentData = monthDataLine
+    currentLabel = monthLabels
+  } 
+  if(current == "year"){
+    currentData = yearDataLine
+    currentLabel = yearLabels
+  } 
+
   myChart.destroy();
   myChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels:  weekData,
+        labels:  currentLabel,
         datasets: [{
             label: 'Price',
-            data: weekData,
+            data: currentData,
             backgroundColor: 'rgb(95,120,138,0.1)',
             borderColor: 'rgba(95,120,138,0.8)',
             borderWidth: 1
@@ -316,6 +368,6 @@ $("#sell").on('input', function() {
    }
 
 });
-</script>	
+</script> 
 </div>
 {% endblock content %}
