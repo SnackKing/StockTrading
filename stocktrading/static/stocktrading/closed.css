@@ -8,6 +8,12 @@ body {
 h1, h2, h3, h4, h5, h6 {
   color: lightgrey !important;
 }
+.darkDrop{
+  background-color: #4F4E4E !important;
+}
+.drop{
+	background-color: #4F4E4E !important;
+}
 
 article{
 	background: #4F4E4E !important;
@@ -53,4 +59,7 @@ p {
 }
 .downtrend{
   color: red !important;
+}
+.dropdown-item:hover { 
+  background-color: black !important;
 }

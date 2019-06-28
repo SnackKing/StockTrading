@@ -291,7 +291,7 @@ def stocks(request, symbol):
     except:
         newsData["message"] = "There was a problem getting news data"
 
-    context = {'symbol': symbol, 'stock': data,'labels':labels, 'historyData':historyData , 'user': user,'name':request.session['name'], 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn, 'newsData':newsData, 'isOpen':False, 'afterHoursAllowed': afterMarketTradingAllowed}
+    context = {'symbol': symbol, 'stock': data,'labels':labels, 'historyData':historyData , 'user': user,'name':request.session['name'], 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn, 'newsData':newsData, 'isOpen':isMarketOpen(), 'afterHoursAllowed': afterMarketTradingAllowed}
     return render(request, 'stocktrading/stock.html', context)
 
 def getNewsData(symbol):
@@ -509,6 +509,7 @@ def signout(request):
     try:
         del request.session['uid']
         del request.session['name']
+        del request.session['afterHours']
     except:
         pass
     return redirect("stocktrading-landing")
