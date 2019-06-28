@@ -12,8 +12,10 @@
     <!--Font awesome  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://kit.fontawesome.com/de151bc630.js"></script>
-
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.25/moment-timezone.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.25/moment-timezone-with-data.js
+"></script>
     <link rel="stylesheet" type = "text/css" href = "{% static 'stocktrading/main.css' %}">
     <link rel="stylesheet" type = "text/css" href = "{% static 'stocktrading/login.css' %}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -25,9 +27,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'stocktrading/media/favicon.png' %}"/>
     <script>
 		function getStylesheet() {
-		      var currentTime = new Date().getHours();
+			  var currentTime = moment(new Date()).tz('America/New_York').hour()
 		      console.log(currentTime)
-		      if (!(9.5 <= currentTime&&currentTime < 17) || new Date().getDay() == 0 || new Date().getDay() == 6) {
+		      if (!(9 <= currentTime&&currentTime < 17) || new Date().getDay() == 0 || new Date().getDay() == 6) {
 		       document.write("<link rel='stylesheet' href='{% static 'stocktrading/closed.css' %}' type='text/css'>");
 		      }
 		}
@@ -68,7 +70,7 @@
 				  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				    {{name}}
 				  </button>
-				  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+				  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style = "background-color: #4F4E4E;">
 				    <a class="dropdown-item" href="{% url 'stocktrading-account' %}">Account</a>
 				    <a class="dropdown-item" href="{% url 'stocktrading-transactions' %}">Transactions</a>
 				    <a class="dropdown-item" href="{% url 'stocktrading-signout' %}">Sign Out</a>
