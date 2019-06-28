@@ -244,7 +244,12 @@ $("#line").click(function (){
 </script>
 
 
-{% if isOpen %}
+{% if isOpen or afterHoursAllowed %}
+    {% if afterHoursAllowed and not isOpen%}
+      <div class = "bg-green p-3 m-4" style = "text-align: center;">
+        <p>The markets are closed, but after hours trading is allowed on this account</p>
+      </div>
+    {% endif %}
     <div class = "hiddenError p-3 m-4" id = "refreshMessage">
       <p>5 minutes have passed. To prevent cheating and reduce network usage, please refresh the page to make a transaction</p>
     </div>

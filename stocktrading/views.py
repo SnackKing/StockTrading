@@ -136,6 +136,12 @@ def login(request):
             request.session['uid'] = userid
             user = db.child("users").child(userid).get()
             name = user.val()['name']
+            #handle accounts created before this feature was implemented
+            try:
+                afterHours = user.val()['afterHoursAllowed']
+                request.session['afterHours'] = afterHours
+            except:
+                request.session['afterHours'] = False 
             request.session['name'] = name
             messages.success(request, f'{name} has been logged in')
             return redirect('stocktrading-home')
@@ -202,6 +208,9 @@ def stocks(request, symbol):
     if 'uid' not in request.session:
         return redirect('stocktrading-home')
     uid = request.session['uid']
+    afterMarketTradingAllowed = False
+    if 'afterHours' in request.session:
+        afterMarketTradingAllowed = request.session['afterHours']
 
     #make API call to get data for stock in question
     parameters = {
@@ -282,7 +291,7 @@ def stocks(request, symbol):
     except:
         newsData["message"] = "There was a problem getting news data"
 
-    context = {'symbol': symbol, 'stock': data,'labels':labels, 'historyData':historyData , 'user': user,'name':request.session['name'], 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn, 'newsData':newsData, 'isOpen':isMarketOpen()}
+    context = {'symbol': symbol, 'stock': data,'labels':labels, 'historyData':historyData , 'user': user,'name':request.session['name'], 'owned': owned, 'numShares': numShares, 'equity': equity, 'returnVal': returnVal, 'numTrans':numTrans, 'totalReturn':totalreturn, 'newsData':newsData, 'isOpen':isMarketOpen(), 'afterHoursAllowed': afterMarketTradingAllowed}
     return render(request, 'stocktrading/stock.html', context)
 
 def getNewsData(symbol):
