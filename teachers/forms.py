@@ -69,7 +69,7 @@ class NewClassForm(forms.Form):
     )
     afterHoursAllowed = forms.BooleanField(
         label = "Allow After Hours Trading",
-        required = True,
+        required = False,
         widget = forms.CheckboxInput(
             attrs = {'class': 'p-3 checkbox mb-4', 'name': 'AfterHoursAllowed'}
         )
