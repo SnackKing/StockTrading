@@ -38,7 +38,7 @@
 	         <p class='text-muted'>Stocks you own: 
 	         <ul class="list-group">
 	         	{% for key, value in owned.items %}
-	            <li class="list-group-item list-group-item-light sidebar-closed-inner">{{value.symbol}}: ${{value.price}} <span class = "{% if value.day_change|slice:'1' == '-' %}downtrend{% else %}uptrend{% endif %}">({{value.day_change}})</span> <br/> {{value.numShares}} shares</li>
+	           <a href ="stocks/{{value.symbol}}"> <li class="list-group-item list-group-item-light sidebar-closed-inner">{{value.symbol}}: ${{value.price}} <span class = "{% if value.day_change|slice:'1' == '-' %}downtrend{% else %}uptrend{% endif %}">({{value.day_change}})</span> <br/> {{value.numShares}} shares</li></a>
 	            {% endfor %}
 	         </ul>
 	         </p>
