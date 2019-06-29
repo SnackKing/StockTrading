@@ -170,7 +170,7 @@ def signup(request):
             user = auth.sign_in_with_email_and_password(email, password)
 
             # get token and push related data
-            newUser = {"name": username, "email": email, "balance":500}
+            newUser = {"name": username, "email": email, "balance":500, "afterHoursAllowed":False}
             info = auth.get_account_info(user['idToken'])
             userInfo = info['users']
             userId = userInfo[0]['localId']
@@ -179,14 +179,15 @@ def signup(request):
             #get class info if join code used
             if not code == "":
                 tid = db.child('codes_tid').child(code).get().val();
-                print(tid);
                 if not tid == None:
                     classInfo = db.child('teachers').child(tid).child('classes').child(code).get().val()
                     print(classInfo)
                     newUser['balance'] = int(classInfo['startingMoney'])
+                    newUser['afterHoursAllowed'] = bool(classInfo['afterHoursAllowed'])
                     newUser['className'] = classInfo['className']
                     db.child('teachers').child(tid).child('classes').child(code).child('students').child(userId).set(username)
 
+            request.session['afterHours'] = newUser['afterHoursAllowed']
             db.child("users").child(userId).set(newUser)
 
             # return flash message and redirect
@@ -208,9 +209,12 @@ def stocks(request, symbol):
     if 'uid' not in request.session:
         return redirect('stocktrading-home')
     uid = request.session['uid']
+
     afterMarketTradingAllowed = False
     if 'afterHours' in request.session:
         afterMarketTradingAllowed = request.session['afterHours']
+    print("IMPORTANT")
+    print(request.session['afterHours'])
 
     #make API call to get data for stock in question
     parameters = {

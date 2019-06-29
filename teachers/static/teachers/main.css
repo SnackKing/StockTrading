@@ -201,3 +201,7 @@ a.article-title:hover {
 .centeredText{
   text-align: center;
 }
+.checkbox{
+   height: 1em;
+   width: 1em;
+}

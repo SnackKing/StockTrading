@@ -23,6 +23,8 @@
 	        	</div>
 	            <p class="article-content">Number of students: {{class.students|length}}</p>
 	            <p class = "article-content">Starting Money: ${{class.startingMoney}}</p>
+	            <p class = "article-content">After Hours Trading Enabled: {{class.afterHoursAllowed}}</p>
+
 	            {% if class.students %}
 	            <a class="btn btn-md btn-primary bg-green" href="classes/{{key}}">View Students</a>
 	           	<a class="btn btn-md btn-primary bg-green" href="classes/{{key}}/leaderboard">Leaderboard</a>

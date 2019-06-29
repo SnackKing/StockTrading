@@ -67,6 +67,14 @@ class NewClassForm(forms.Form):
             attrs = {'class': 'form-control mb-4', 'name': 'StartingCash', 'min': 0}
         )
     )
+    afterHoursAllowed = forms.BooleanField(
+        label = "Allow After Hours Trading",
+        required = True,
+        widget = forms.CheckboxInput(
+            attrs = {'class': 'p-3 checkbox mb-4', 'name': 'AfterHoursAllowed'}
+        )
+
+    )
 
 
 class ResetPass(forms.Form):

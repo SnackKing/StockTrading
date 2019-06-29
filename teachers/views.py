@@ -125,11 +125,12 @@ def newclass(request):
         if form.is_valid():
             className = form.cleaned_data.get('name')
             startingMoney = form.cleaned_data.get('startingCash')
+            afterHoursAllowed = form.cleaned_data.get('afterHoursAllowed')
             joinCode = ''.join(random.choices(
                 string.ascii_uppercase + string.digits, k=10))
             print(joinCode)
             db.child('teachers').child(tid).child('classes').child(joinCode).set(
-                {'className': className, 'startingMoney': startingMoney})
+                {'className': className, 'startingMoney': startingMoney, 'afterHoursAllowed':afterHoursAllowed})
             db.child('codes_tid').child(joinCode).set(tid)
             messages.success(request, f'{className} class created')
             return redirect('teachers-dashboard')
